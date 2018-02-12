@@ -66,6 +66,8 @@ exports[`PropTypes can be imported under a different name 1`] = `
       required: true
     });
   };
+
+  return t;
 }();
 
 import t from 'prop-types';
@@ -156,6 +158,8 @@ exports[`functional components (arrow expression) simple example 1`] = `
       required: true
     });
   };
+
+  return t;
 }();
 
 import PropTypes from 'prop-types';
@@ -244,6 +248,8 @@ exports[`functional components (function declaration) simple example 1`] = `
       required: true
     });
   };
+
+  return t;
 }();
 
 import PropTypes from 'prop-types';
@@ -334,6 +340,8 @@ exports[`functional components (function expression) simple example 1`] = `
       required: true
     });
   };
+
+  return t;
 }();
 
 import PropTypes from 'prop-types';
@@ -424,6 +432,8 @@ exports[`metadata property name can be configured 1`] = `
       required: true
     });
   };
+
+  return t;
 }();
 
 import t from 'prop-types';

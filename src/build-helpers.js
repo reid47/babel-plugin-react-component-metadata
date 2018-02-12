@@ -99,7 +99,8 @@ export default helperName => {
                 )
               ])
             )
-          )
+          ),
+          t.returnStatement(id('t'))
         ])
       ),
       []
