@@ -1,159 +1,108 @@
 import * as t from 'babel-types';
 
-// probably want to use babel/templat here:
-// https://github.com/babel/babel/tree/master/packages/babel-template
+const id = name => t.identifier(name);
+const bool = value => t.booleanLiteral(value);
+const str = value => t.stringLiteral(value);
+const member = (obj, prop, computed) => t.memberExpression(obj, prop, computed);
+const objProp = (prop, val) => t.objectProperty(prop, val);
+const varDec = (id, value) =>
+  t.variableDeclaration('var', [t.variableDeclarator(id, value)]);
+const assignment = (left, right) =>
+  t.expressionStatement(t.assignmentExpression('=', left, right));
+const emptyObjExpr = t.objectExpression([]);
 
-const id = s => t.identifier(s);
-
-export default function buildHelpers(helperName) {
-  return t.variableDeclaration('var', [
-    t.variableDeclarator(
-      helperName,
-      t.callExpression(
-        t.functionExpression(
-          null,
-          [],
-          t.blockStatement([
-            t.functionDeclaration(
-              t.identifier('makeFuncType'),
-              [t.identifier('type'), t.identifier('optionsName')],
-              t.blockStatement([
-                t.returnStatement(
-                  t.functionExpression(
-                    null,
-                    [t.identifier('options')],
-                    t.blockStatement([
-                      t.variableDeclaration('var', [
-                        t.variableDeclarator(
-                          t.identifier('opts'),
-                          t.objectExpression([])
-                        )
-                      ]),
-                      t.expressionStatement(
-                        t.assignmentExpression(
-                          '=',
-                          t.memberExpression(
-                            t.identifier('opts'),
-                            t.identifier('optionsName'),
-                            true
-                          ),
-                          t.identifier('options')
-                        )
-                      ),
-                      t.returnStatement(
-                        t.callExpression(
-                          t.memberExpression(
-                            t.identifier('Object'),
-                            t.identifier('assign')
-                          ),
-                          [
-                            t.objectExpression([
-                              t.objectProperty(
-                                t.identifier('type'),
-                                t.identifier('type')
-                              ),
-                              t.objectProperty(
-                                t.identifier('required'),
-                                t.booleanLiteral(false)
-                              )
-                            ]),
-                            t.identifier('opts')
-                          ]
-                        )
-                      )
-                    ])
-                  )
-                )
-              ])
-            ),
-            t.variableDeclaration('var', [
-              t.variableDeclarator(t.identifier('t'), t.objectExpression([]))
-            ]),
-            ...[
-              'string',
-              'number',
-              'bool',
-              'func',
-              'object',
-              'symbol',
-              'array',
-              'node',
-              'element',
-              'any'
-            ].map(type => {
-              return t.expressionStatement(
-                t.assignmentExpression(
-                  '=',
-                  t.memberExpression(t.identifier('t'), t.identifier(type)),
-                  t.objectExpression([
-                    t.objectProperty(
-                      t.identifier('type'),
-                      t.stringLiteral(type)
-                    ),
-                    t.objectProperty(
-                      t.identifier('required'),
-                      t.booleanLiteral(false)
-                    )
-                  ])
-                )
-              );
-            }),
-            ...[
-              ['oneOf', 'possibleValues'],
-              ['instanceOf', 'constructor'],
-              ['arrayOf', 'elementType'],
-              ['objectOf', 'valueType'],
-              ['oneOfType', 'possibleTypes'],
-              ['shape', 'innerTypes']
-            ].map(([type, additionalField]) => {
-              return t.expressionStatement(
-                t.assignmentExpression(
-                  '=',
-                  t.memberExpression(t.identifier('t'), t.identifier(type)),
-                  t.callExpression(t.identifier('makeFuncType'), [
-                    t.stringLiteral(type),
-                    t.stringLiteral(additionalField)
-                  ])
-                )
-              );
-            }),
-            t.expressionStatement(
-              t.assignmentExpression(
-                '=',
-                t.memberExpression(
-                  t.identifier('t'),
-                  t.identifier('isRequired')
-                ),
+export default helperName => {
+  return varDec(
+    helperName,
+    t.callExpression(
+      t.functionExpression(
+        null,
+        [],
+        t.blockStatement([
+          t.functionDeclaration(
+            id('makeFuncType'),
+            [id('type'), id('optionsName')],
+            t.blockStatement([
+              t.returnStatement(
                 t.functionExpression(
                   null,
-                  [t.identifier('type')],
+                  [id('options')],
                   t.blockStatement([
+                    varDec(id('opts'), emptyObjExpr),
+                    assignment(
+                      member(id('opts'), id('optionsName'), true),
+                      id('options')
+                    ),
                     t.returnStatement(
-                      t.callExpression(
-                        t.memberExpression(
-                          t.identifier('Object'),
-                          t.identifier('assign')
-                        ),
-                        [
-                          t.objectExpression([]),
-                          t.identifier('type'),
-                          t.objectExpression([
-                            t.objectProperty(
-                              t.identifier('required'),
-                              t.booleanLiteral(true)
-                            )
-                          ])
-                        ]
-                      )
+                      t.callExpression(member(id('Object'), id('assign')), [
+                        t.objectExpression([
+                          objProp(id('type'), id('type')),
+                          objProp(id('required'), bool(false))
+                        ]),
+                        id('opts')
+                      ])
                     )
                   ])
                 )
               )
+            ])
+          ),
+          varDec(id('t'), emptyObjExpr),
+          ...[
+            'string',
+            'number',
+            'bool',
+            'func',
+            'object',
+            'symbol',
+            'array',
+            'node',
+            'element',
+            'any'
+          ].map(type =>
+            assignment(
+              member(id('t'), id(type)),
+              t.objectExpression([
+                objProp(id('type'), str(type)),
+                objProp(id('required'), bool(false))
+              ])
             )
-          ])
-        ),
-        []
-      )
+          ),
+          ...[
+            ['oneOf', 'possibleValues'],
+            ['instanceOf', 'constructor'],
+            ['arrayOf', 'elementType'],
+            ['objectOf', 'valueType'],
+            ['oneOfType', 'possibleTypes'],
+            ['shape', 'innerTypes']
+          ].map(([type, additionalField]) =>
+            assignment(
+              member(id('t'), id(type)),
+              t.callExpression(id('makeFuncType'), [
+                str(type),
+                str(additionalField)
+              ])
+            )
+          ),
+          assignment(
+            member(id('t'), id('isRequired')),
+            t.functionExpression(
+              null,
+              [id('type')],
+              t.blockStatement([
+                t.returnStatement(
+                  t.callExpression(member(id('Object'), id('assign')), [
+                    emptyObjExpr,
+                    id('type'),
+                    t.objectExpression([objProp(id('required'), bool(true))])
+                  ])
+                )
+              ])
+            )
+          )
+        ])
+      ),
+      []
     )
-  ]);
-}
+  );
+};
