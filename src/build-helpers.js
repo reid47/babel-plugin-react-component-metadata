@@ -1,11 +1,11 @@
-import * as t from '@babel/types';
+import * as t from 'babel-types';
 
 // probably want to use babel/templat here:
 // https://github.com/babel/babel/tree/master/packages/babel-template
 
 const id = s => t.identifier(s);
 
-export default function buildFakeTypesLibrary(helperName) {
+export default function buildHelpers(helperName) {
   return t.variableDeclaration('var', [
     t.variableDeclarator(
       helperName,

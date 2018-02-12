@@ -1,21 +1,31 @@
-import * as t from '@babel/types';
+import * as t from 'babel-types';
+import buildHelpers from './build-helpers';
 
-export default function() {
+const id = name => t.identifier(name);
+
+const init = (obj, ...fields) => {
+  fields.forEach(field => {
+    obj[field] = obj[field] || {};
+    obj = obj[field];
+  });
+};
+
+export default () => {
   const knownComponents = {};
 
   const options = {
     propTypesAlias: 'PropTypes',
     metadataFieldName: '__metadata',
-    fakePropTypesName: t.identifier('fakePropTypes')
+    helpersName: id('metadataHelpers')
   };
 
   const renameVisitor = {
-    Identifier(path) {
+    Identifier: path => {
       if (path.node.name === options.propTypesAlias) {
-        path.node.name = options.fakePropTypesName.name;
+        path.node.name = options.helpersName.name;
       }
     },
-    MemberExpression(path) {
+    MemberExpression: path => {
       if (
         (t.isCallExpression(path.node.object) ||
           t.isMemberExpression(path.node.object)) &&
@@ -23,10 +33,7 @@ export default function() {
       ) {
         path.replaceWith(
           t.callExpression(
-            t.memberExpression(
-              options.fakePropTypesName,
-              t.identifier('isRequired')
-            ),
+            t.memberExpression(options.helpersName, id('isRequired')),
             [path.node.object]
           )
         );
@@ -34,18 +41,11 @@ export default function() {
     }
   };
 
-  function init(obj, ...fields) {
-    fields.forEach(field => {
-      obj[field] = obj[field] || {};
-      obj = obj[field];
-    });
-  }
-
-  function isTopLevel(path) {
+  const isTopLevel = path => {
     return path.parent.type === 'Program';
-  }
+  };
 
-  function collectPropTypes(propMetadata, objExp) {
+  const collectPropTypes = (propMetadata, objExp) => {
     objExp.properties.forEach(propNode => {
       if (!t.isIdentifier(propNode.key)) return;
       const propName = propNode.key.name;
@@ -55,24 +55,24 @@ export default function() {
       init(propMetadata, propName);
       propMetadata[propName] = propNode.value;
     });
-  }
+  };
 
-  function buildFakeProps(propsAst) {
+  const buildFakeProps = propsAst => {
     return t.objectExpression(
       Object.keys(propsAst).map(propName => {
         const clone = t.cloneDeep(propsAst[propName]);
         clone.loc = null;
         return t.objectProperty(
-          t.identifier(propName),
-          t.objectExpression([t.objectProperty(t.identifier('type'), clone)])
+          id(propName),
+          t.objectExpression([t.objectProperty(id('type'), clone)])
         );
       })
     );
-  }
+  };
 
   return {
     visitor: {
-      ImportDeclaration(path) {
+      ImportDeclaration: path => {
         if (!isTopLevel(path)) return;
         if (path.node.source.value !== 'prop-types') return;
 
@@ -84,21 +84,21 @@ export default function() {
         options.propTypesAlias = defaultImportSpecifier.local.name;
       },
 
-      ClassDeclaration(path) {
+      ClassDeclaration: path => {
         if (!isTopLevel(path)) return;
 
         init(knownComponents, path.node.id.name);
         knownComponents[path.node.id.name].path = path;
       },
 
-      FunctionDeclaration(path) {
+      FunctionDeclaration: path => {
         if (!isTopLevel(path)) return;
 
         init(knownComponents, path.node.id.name);
         knownComponents[path.node.id.name].path = path;
       },
 
-      VariableDeclaration(path) {
+      VariableDeclaration: path => {
         if (!isTopLevel(path)) return;
 
         const declarator = path.node.declarations[0];
@@ -108,7 +108,7 @@ export default function() {
         knownComponents[declarator.id.name].path = path;
       },
 
-      ClassProperty(path) {
+      ClassProperty: path => {
         if (!path.node.static) return;
 
         const staticPropName = path.node.key.name;
@@ -125,7 +125,7 @@ export default function() {
         collectPropTypes(knownComponents[parentClassName].props, staticPropVal);
       },
 
-      ExpressionStatement(path) {
+      ExpressionStatement: path => {
         if (!isTopLevel(path)) return;
         if (!t.isAssignmentExpression(path.node.expression)) return;
 
@@ -142,15 +142,14 @@ export default function() {
       },
 
       Program: {
-        exit(path) {
-          options.fakePropTypesName = path.scope.generateUidIdentifierBasedOnNode(
-            options.fakePropTypesName
+        exit: path => {
+          options.helpersName = path.scope.generateUidIdentifierBasedOnNode(
+            options.helpersName
           );
 
-          path.unshiftContainer(
-            'body',
-            buildFakeTypesLibrary(options.fakePropTypesName)
-          );
+          if (Object.keys(knownComponents).length) {
+            path.unshiftContainer('body', buildHelpers(options.helpersName));
+          }
 
           Object.keys(knownComponents).forEach(c => {
             const componentPath = knownComponents[c].path;
@@ -161,13 +160,10 @@ export default function() {
                 t.expressionStatement(
                   t.assignmentExpression(
                     '=',
-                    t.memberExpression(
-                      t.identifier(c),
-                      t.identifier(options.metadataFieldName)
-                    ),
+                    t.memberExpression(id(c), id(options.metadataFieldName)),
                     t.objectExpression([
                       t.objectProperty(
-                        t.identifier('props'),
+                        id('props'),
                         buildFakeProps(componentProps)
                       )
                     ])
@@ -182,4 +178,4 @@ export default function() {
       }
     }
   };
-}
+};
