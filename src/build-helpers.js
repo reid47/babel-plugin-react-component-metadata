@@ -102,7 +102,7 @@ const makeFuncTypeNode = t.functionDeclaration(
 );
 
 /**
- * Given an u.identifier, builds a node for a tiny prop-types
+ * Given an identifier, builds a node for a tiny prop-types
  * replacement library that will be dropped into the existing
  * code.
  *
