@@ -1,15 +1,5 @@
 import * as t from 'babel-types';
-
-const id = name => t.identifier(name);
-const bool = value => t.booleanLiteral(value);
-const str = value => t.stringLiteral(value);
-const member = (obj, prop, computed) => t.memberExpression(obj, prop, computed);
-const objProp = (prop, val) => t.objectProperty(prop, val);
-const obj = (...objProps) => t.objectExpression(objProps);
-const varDec = (id, value) =>
-  t.variableDeclaration('var', [t.variableDeclarator(id, value)]);
-const assignment = (left, right) =>
-  t.expressionStatement(t.assignmentExpression('=', left, right));
+import * as u from './ast-utils';
 
 /**
  * Builds a node representing an assignment of
@@ -19,9 +9,12 @@ const assignment = (left, right) =>
  * t.someType = {type: 'someType', required: true};
  */
 const buildSimpleTypeNode = type =>
-  assignment(
-    member(id('t'), id(type)),
-    obj(objProp(id('type'), str(type)), objProp(id('required'), bool(false)))
+  u.assignment(
+    u.member(u.id('t'), u.id(type)),
+    u.obj(
+      u.objProp(u.id('type'), u.str(type)),
+      u.objProp(u.id('required'), u.bool(false))
+    )
   );
 
 /**
@@ -32,9 +25,12 @@ const buildSimpleTypeNode = type =>
  * t.someType = makeFuncType('someType', 'someAdditionalProperty');
  */
 const buildComplexTypeNode = ([type, additionalField]) =>
-  assignment(
-    member(id('t'), id(type)),
-    t.callExpression(id('makeFuncType'), [str(type), str(additionalField)])
+  u.assignment(
+    u.member(u.id('t'), u.id(type)),
+    t.callExpression(u.id('makeFuncType'), [
+      u.str(type),
+      u.str(additionalField)
+    ])
   );
 
 /**
@@ -46,17 +42,17 @@ const buildComplexTypeNode = ([type, additionalField]) =>
  *   return Object.assign({}, type, {required: true});
  * }
  */
-const isRequiredNode = assignment(
-  member(id('t'), id('isRequired')),
+const isRequiredNode = u.assignment(
+  u.member(u.id('t'), u.id('isRequired')),
   t.functionExpression(
     null,
-    [id('type')],
+    [u.id('type')],
     t.blockStatement([
       t.returnStatement(
-        t.callExpression(member(id('Object'), id('assign')), [
-          obj(),
-          id('type'),
-          obj(objProp(id('required'), bool(true)))
+        t.callExpression(u.member(u.id('Object'), u.id('assign')), [
+          u.obj(),
+          u.id('type'),
+          u.obj(u.objProp(u.id('required'), u.bool(true)))
         ])
       )
     ])
@@ -77,26 +73,26 @@ const isRequiredNode = assignment(
  * }
  */
 const makeFuncTypeNode = t.functionDeclaration(
-  id('makeFuncType'),
-  [id('type'), id('optionsName')],
+  u.id('makeFuncType'),
+  [u.id('type'), u.id('optionsName')],
   t.blockStatement([
     t.returnStatement(
       t.functionExpression(
         null,
-        [id('options')],
+        [u.id('options')],
         t.blockStatement([
-          varDec(id('opts'), obj()),
-          assignment(
-            member(id('opts'), id('optionsName'), true),
-            id('options')
+          u.varDec(u.id('opts'), u.obj()),
+          u.assignment(
+            u.member(u.id('opts'), u.id('optionsName'), true),
+            u.id('options')
           ),
           t.returnStatement(
-            t.callExpression(member(id('Object'), id('assign')), [
-              obj(
-                objProp(id('type'), id('type')),
-                objProp(id('required'), bool(false))
+            t.callExpression(u.member(u.id('Object'), u.id('assign')), [
+              u.obj(
+                u.objProp(u.id('type'), u.id('type')),
+                u.objProp(u.id('required'), u.bool(false))
               ),
-              id('opts')
+              u.id('opts')
             ])
           )
         ])
@@ -106,7 +102,7 @@ const makeFuncTypeNode = t.functionDeclaration(
 );
 
 /**
- * Given an identifier, builds a node for a tiny prop-types
+ * Given an u.identifier, builds a node for a tiny prop-types
  * replacement library that will be dropped into the existing
  * code.
  *
@@ -116,7 +112,7 @@ const makeFuncTypeNode = t.functionDeclaration(
  * })();
  */
 export default helperName => {
-  return varDec(
+  return u.varDec(
     helperName,
     t.callExpression(
       t.functionExpression(
@@ -127,7 +123,7 @@ export default helperName => {
           makeFuncTypeNode,
 
           // var t = {};
-          varDec(id('t'), obj()),
+          u.varDec(u.id('t'), u.obj()),
 
           // t.string = ...
           ...[
@@ -157,7 +153,7 @@ export default helperName => {
           isRequiredNode,
 
           // return t;
-          t.returnStatement(id('t'))
+          t.returnStatement(u.id('t'))
         ])
       ),
       []

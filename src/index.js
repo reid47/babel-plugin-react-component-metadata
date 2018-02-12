@@ -1,7 +1,6 @@
 import * as t from 'babel-types';
+import * as u from './ast-utils';
 import buildHelpers from './build-helpers';
-
-const id = name => t.identifier(name);
 
 const init = (obj, ...fields) => {
   fields.forEach(field => {
@@ -10,13 +9,17 @@ const init = (obj, ...fields) => {
   });
 };
 
+const isTopLevel = path => {
+  return path.parent.type === 'Program';
+};
+
 export default () => {
   const knownComponents = {};
 
   const defaultOptions = {
     propTypesAlias: 'PropTypes',
     metadataPropertyName: 'metadata',
-    helpersName: id('metadataHelpers')
+    helpersName: u.id('metadataHelpers')
   };
 
   const renameVisitor = {
@@ -33,7 +36,7 @@ export default () => {
       ) {
         path.replaceWith(
           t.callExpression(
-            t.memberExpression(defaultOptions.helpersName, id('isRequired')),
+            u.member(defaultOptions.helpersName, u.id('isRequired')),
             [path.node.object]
           )
         );
@@ -41,16 +44,10 @@ export default () => {
     }
   };
 
-  const isTopLevel = path => {
-    return path.parent.type === 'Program';
-  };
-
   const collectPropTypes = (propMetadata, objExp) => {
     objExp.properties.forEach(propNode => {
       if (!t.isIdentifier(propNode.key)) return;
       const propName = propNode.key.name;
-      let type = '<unknown>',
-        required = false;
 
       init(propMetadata, propName);
       propMetadata[propName] = propNode.value;
@@ -58,14 +55,11 @@ export default () => {
   };
 
   const buildFakeProps = propsAst => {
-    return t.objectExpression(
-      Object.keys(propsAst).map(propName => {
+    return u.obj(
+      ...Object.keys(propsAst).map(propName => {
         const clone = t.cloneDeep(propsAst[propName]);
         clone.loc = null;
-        return t.objectProperty(
-          id(propName),
-          t.objectExpression([t.objectProperty(id('type'), clone)])
-        );
+        return u.objProp(u.id(propName), u.obj(u.objProp(u.id('type'), clone)));
       })
     );
   };
@@ -160,22 +154,16 @@ export default () => {
 
             if (componentPath && componentProps) {
               const newPath = componentPath.insertAfter(
-                t.expressionStatement(
-                  t.assignmentExpression(
-                    '=',
-                    t.memberExpression(
-                      id(c),
-                      id(
-                        state.opts.metadataPropertyName ||
-                          defaultOptions.metadataPropertyName
-                      )
-                    ),
-                    t.objectExpression([
-                      t.objectProperty(
-                        id('props'),
-                        buildFakeProps(componentProps)
-                      )
-                    ])
+                u.assignment(
+                  u.member(
+                    u.id(c),
+                    u.id(
+                      state.opts.metadataPropertyName ||
+                        defaultOptions.metadataPropertyName
+                    )
+                  ),
+                  u.obj(
+                    u.objProp(u.id('props'), buildFakeProps(componentProps))
                   )
                 )
               )[0];
