@@ -1,9 +1,9 @@
 import * as babel from 'babel-core';
 import plugin from '../src';
 
-const transform = example => {
+const transform = (example, options) => {
   const { code } = babel.transform(example, {
-    plugins: ['syntax-jsx', plugin]
+    plugins: ['syntax-jsx', options ? [plugin, options] : plugin]
   });
 
   return code;
@@ -91,6 +91,27 @@ test('PropTypes can be imported under a different name', () => {
     `;
 
   expect(transform(example)).toMatchSnapshot();
+});
+
+test('metadata property name can be configured', () => {
+  const example = `
+      import t from 'prop-types';
+
+      function Test(props) {
+        return <h1>{props.name}</h1>;
+      };
+
+      Test.propTypes = {
+        name: t.string.isRequired,
+        age: t.number
+      };
+    `;
+
+  expect(
+    transform(example, {
+      metadataPropertyName: '__customMetadata'
+    })
+  ).toMatchSnapshot();
 });
 
 // when renaming proptypes import

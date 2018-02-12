@@ -13,16 +13,16 @@ const init = (obj, ...fields) => {
 export default () => {
   const knownComponents = {};
 
-  const options = {
+  const defaultOptions = {
     propTypesAlias: 'PropTypes',
-    metadataFieldName: '__metadata',
+    metadataPropertyName: 'metadata',
     helpersName: id('metadataHelpers')
   };
 
   const renameVisitor = {
     Identifier: path => {
-      if (path.node.name === options.propTypesAlias) {
-        path.node.name = options.helpersName.name;
+      if (path.node.name === defaultOptions.propTypesAlias) {
+        path.node.name = defaultOptions.helpersName.name;
       }
     },
     MemberExpression: path => {
@@ -33,7 +33,7 @@ export default () => {
       ) {
         path.replaceWith(
           t.callExpression(
-            t.memberExpression(options.helpersName, id('isRequired')),
+            t.memberExpression(defaultOptions.helpersName, id('isRequired')),
             [path.node.object]
           )
         );
@@ -81,7 +81,7 @@ export default () => {
         )[0];
         if (!defaultImportSpecifier) return;
 
-        options.propTypesAlias = defaultImportSpecifier.local.name;
+        defaultOptions.propTypesAlias = defaultImportSpecifier.local.name;
       },
 
       ClassDeclaration: path => {
@@ -142,13 +142,16 @@ export default () => {
       },
 
       Program: {
-        exit: path => {
-          options.helpersName = path.scope.generateUidIdentifierBasedOnNode(
-            options.helpersName
+        exit: (path, state) => {
+          defaultOptions.helpersName = path.scope.generateUidIdentifierBasedOnNode(
+            defaultOptions.helpersName
           );
 
           if (Object.keys(knownComponents).length) {
-            path.unshiftContainer('body', buildHelpers(options.helpersName));
+            path.unshiftContainer(
+              'body',
+              buildHelpers(defaultOptions.helpersName)
+            );
           }
 
           Object.keys(knownComponents).forEach(c => {
@@ -160,7 +163,13 @@ export default () => {
                 t.expressionStatement(
                   t.assignmentExpression(
                     '=',
-                    t.memberExpression(id(c), id(options.metadataFieldName)),
+                    t.memberExpression(
+                      id(c),
+                      id(
+                        state.opts.metadataPropertyName ||
+                          defaultOptions.metadataPropertyName
+                      )
+                    ),
                     t.objectExpression([
                       t.objectProperty(
                         id('props'),

@@ -30,7 +30,7 @@ import MyComponent from 'path/to/component';
 import formatType from 'some/helper';
 
 const MyComponentDocs = () => {
-  const { props } = MyComponent.__propMetadata;
+  const { props } = MyComponent.__metadata;
 
   return (
     <table>
@@ -58,20 +58,24 @@ const MyComponentDocs = () => {
 This plugin inserts the static field `__propMetadata` on your components and
 populates it with the information it collects.
 
-## but why??
+## why does this exist?
 
-The primary goal is to help with **automatic documentation generation**. If
-you're building a component library, for example, you'll probably want some kind
-of documentation. But manually keeping your documentation up-to-date with the
-code is hard. Every time you add/remove/change a prop in the code, you need to
-update your documentation accordingly. It's better to have one source of truth -
-the code - and let your documentation pull directly from there.
+The primary goal of this plugin is to help with **automatic documentation
+generation**. If you're building a component library, for example, you'll
+probably want some kind of documentation. But manually keeping your
+documentation up-to-date with the code is hard. Every time you add/remove/change
+a prop in the code, you need to update your documentation accordingly. It's
+better to have one source of truth - the code - and let your documentation pull
+directly from there.
 
-That's why I built this. It's currently tailored to fit my needs, which means I
-didn't take time to implement features I didn't need (e.g. support for
-inspecting Flow types, support for ES5 classes using `createReactClass`). If
-you'd like to help improve this plugin, PRs are welcome!
+That's why I built this plugin. It's currently tailored to fit my use cases,
+which means I didn't implement features I didn't need (e.g. support for
+inspecting Flow types, support for ES5 classes using `createReactClass`). But if
+you'd like to help add features or otherwise improve this plugin, PRs are
+welcome!
 
 ## how do I use it?
+
+### plugin options
 
 ## how does it work?
