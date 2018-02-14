@@ -21,6 +21,59 @@ test('when no React components found', () => {
   expect(transform(example)).toMatchSnapshot();
 });
 
+describe('ES6 classes without static properties', () => {
+  test('simple example', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      class Test extends React.Component {
+        render() {
+          return <h1>{this.props.name}</h1>;
+        }
+      }
+
+      Test.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
+
+  test('multiple components at top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      class Test1 extends React.Component {
+        render() {
+          return <h1>{this.props.name}</h1>;
+        }
+      }
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      class Test2 extends React.Component {
+        render() {
+          return <h2>{this.props.hello}</h2>;
+        }
+      }
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
+
+  test('when exported at the top level', () => {});
+});
+
 describe('functional components (arrow expression)', () => {
   test('simple example', () => {
     const example = `
@@ -36,6 +89,10 @@ describe('functional components (arrow expression)', () => {
 
     expect(transform(example)).toMatchSnapshot();
   });
+
+  test('multiple components at top level', () => {});
+
+  test('when exported at the top level', () => {});
 });
 
 describe('functional components (function expression)', () => {
@@ -55,6 +112,10 @@ describe('functional components (function expression)', () => {
 
     expect(transform(example)).toMatchSnapshot();
   });
+
+  test('multiple components at top level', () => {});
+
+  test('when exported at the top level', () => {});
 });
 
 describe('functional components (function declaration)', () => {
@@ -74,6 +135,10 @@ describe('functional components (function declaration)', () => {
 
     expect(transform(example)).toMatchSnapshot();
   });
+
+  test('multiple components at top level', () => {});
+
+  test('when exported at the top level', () => {});
 });
 
 test('PropTypes can be imported under a different name', () => {

@@ -14,8 +14,6 @@ const isTopLevel = path => {
 };
 
 export default () => {
-  const knownComponents = {};
-
   const defaultOptions = {
     propTypesAlias: 'PropTypes',
     metadataPropertyName: 'metadata',
@@ -23,13 +21,13 @@ export default () => {
   };
 
   const renameVisitor = {
-    Identifier: path => {
+    Identifier(path, state) {
       if (path.node.name === defaultOptions.propTypesAlias) {
         path.node.name = defaultOptions.helpersName.name;
       }
     },
 
-    MemberExpression: path => {
+    MemberExpression(path, state) {
       if (
         (t.isCallExpression(path.node.object) ||
           t.isMemberExpression(path.node.object)) &&
@@ -67,7 +65,7 @@ export default () => {
 
   return {
     visitor: {
-      ImportDeclaration: path => {
+      ImportDeclaration(path, state) {
         if (!isTopLevel(path)) return;
         if (path.node.source.value !== 'prop-types') return;
 
@@ -79,31 +77,31 @@ export default () => {
         defaultOptions.propTypesAlias = defaultImportSpecifier.local.name;
       },
 
-      ClassDeclaration: path => {
+      ClassDeclaration(path, state) {
         if (!isTopLevel(path)) return;
 
-        init(knownComponents, path.node.id.name);
-        knownComponents[path.node.id.name].path = path;
+        init(state.knownComponents, path.node.id.name);
+        state.knownComponents[path.node.id.name].path = path;
       },
 
-      FunctionDeclaration: path => {
+      FunctionDeclaration(path, state) {
         if (!isTopLevel(path)) return;
 
-        init(knownComponents, path.node.id.name);
-        knownComponents[path.node.id.name].path = path;
+        init(state.knownComponents, path.node.id.name);
+        state.knownComponents[path.node.id.name].path = path;
       },
 
-      VariableDeclaration: path => {
+      VariableDeclaration(path, state) {
         if (!isTopLevel(path)) return;
 
         const declarator = path.node.declarations[0];
         if (!t.isFunction(declarator.init)) return;
 
-        init(knownComponents, declarator.id.name);
-        knownComponents[declarator.id.name].path = path;
+        init(state.knownComponents, declarator.id.name);
+        state.knownComponents[declarator.id.name].path = path;
       },
 
-      ClassProperty: path => {
+      ClassProperty(path, state) {
         if (!path.node.static) return;
 
         const staticPropName = path.node.key.name;
@@ -113,14 +111,17 @@ export default () => {
 
         const parentClassDecl = path.findParent(p => t.isClassDeclaration(p));
         const parentClassName = parentClassDecl.node.id.name;
-        if (!knownComponents[parentClassName]) return;
+        if (!state.knownComponents[parentClassName]) return;
 
-        init(knownComponents, parentClassName, 'props');
-        //knownComponents[parentClassName].path = path.node.value;
-        collectPropTypes(knownComponents[parentClassName].props, staticPropVal);
+        init(state.knownComponents, parentClassName, 'props');
+        //state.knownComponents[parentClassName].path = path.node.value;
+        collectPropTypes(
+          state.knownComponents[parentClassName].props,
+          staticPropVal
+        );
       },
 
-      ExpressionStatement: path => {
+      ExpressionStatement(path, state) {
         if (!isTopLevel(path)) return;
         if (!t.isAssignmentExpression(path.node.expression)) return;
 
@@ -132,26 +133,30 @@ export default () => {
         if (!t.isObjectExpression(right)) return;
 
         const componentName = left.object.name;
-        init(knownComponents, componentName, 'props');
-        collectPropTypes(knownComponents[componentName].props, right);
+        init(state.knownComponents, componentName, 'props');
+        collectPropTypes(state.knownComponents[componentName].props, right);
       },
 
       Program: {
-        exit: (path, state) => {
+        enter(path, state) {
+          state.knownComponents = {};
+        },
+
+        exit(path, state) {
           defaultOptions.helpersName = path.scope.generateUidIdentifierBasedOnNode(
             defaultOptions.helpersName
           );
 
-          if (Object.keys(knownComponents).length) {
+          if (Object.keys(state.knownComponents).length) {
             path.unshiftContainer(
               'body',
               buildHelpers(defaultOptions.helpersName)
             );
           }
 
-          Object.keys(knownComponents).forEach(c => {
-            const componentPath = knownComponents[c].path;
-            const componentProps = knownComponents[c].props;
+          Object.keys(state.knownComponents).forEach(c => {
+            const componentPath = state.knownComponents[c].path;
+            const componentProps = state.knownComponents[c].props;
 
             if (componentPath && componentProps) {
               const newPath = componentPath.insertAfter(
