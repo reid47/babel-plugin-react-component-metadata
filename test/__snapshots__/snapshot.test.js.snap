@@ -301,6 +301,113 @@ Test.propTypes = {
 };"
 `;
 
+exports[`functional components (arrow expression) multiple components at top level 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: 'string',
+    required: false
+  };
+  t.number = {
+    type: 'number',
+    required: false
+  };
+  t.bool = {
+    type: 'bool',
+    required: false
+  };
+  t.func = {
+    type: 'func',
+    required: false
+  };
+  t.object = {
+    type: 'object',
+    required: false
+  };
+  t.symbol = {
+    type: 'symbol',
+    required: false
+  };
+  t.array = {
+    type: 'array',
+    required: false
+  };
+  t.node = {
+    type: 'node',
+    required: false
+  };
+  t.element = {
+    type: 'element',
+    required: false
+  };
+  t.any = {
+    type: 'any',
+    required: false
+  };
+  t.oneOf = makeFuncType('oneOf', 'possibleValues');
+  t.instanceOf = makeFuncType('instanceOf', 'constructor');
+  t.arrayOf = makeFuncType('arrayOf', 'elementType');
+  t.objectOf = makeFuncType('objectOf', 'valueType');
+  t.oneOfType = makeFuncType('oneOfType', 'possibleTypes');
+  t.shape = makeFuncType('shape', 'innerTypes');
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+import PropTypes from 'prop-types';
+
+const Test1 = props => <h1>{props.name}</h1>;
+
+Test1.metadata = {
+  props: {
+    name: {
+      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+    },
+    age: {
+      type: _metadataHelpers.number
+    }
+  }
+};
+Test1.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number
+};
+
+const Test2 = props => <h2>{props.hello}</h2>;
+
+Test2.metadata = {
+  props: {
+    hello: {
+      type: _metadataHelpers.node
+    },
+    world: {
+      type: _metadataHelpers.bool
+    }
+  }
+};
+Test2.propTypes = {
+  hello: PropTypes.node,
+  world: PropTypes.bool
+};"
+`;
+
 exports[`functional components (arrow expression) simple example 1`] = `
 "var _metadataHelpers = function () {
   function makeFuncType(type, optionsName) {
@@ -388,6 +495,117 @@ Test.metadata = {
 Test.propTypes = {
   name: PropTypes.string.isRequired,
   age: PropTypes.number
+};"
+`;
+
+exports[`functional components (function declaration) multiple components at top level 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: 'string',
+    required: false
+  };
+  t.number = {
+    type: 'number',
+    required: false
+  };
+  t.bool = {
+    type: 'bool',
+    required: false
+  };
+  t.func = {
+    type: 'func',
+    required: false
+  };
+  t.object = {
+    type: 'object',
+    required: false
+  };
+  t.symbol = {
+    type: 'symbol',
+    required: false
+  };
+  t.array = {
+    type: 'array',
+    required: false
+  };
+  t.node = {
+    type: 'node',
+    required: false
+  };
+  t.element = {
+    type: 'element',
+    required: false
+  };
+  t.any = {
+    type: 'any',
+    required: false
+  };
+  t.oneOf = makeFuncType('oneOf', 'possibleValues');
+  t.instanceOf = makeFuncType('instanceOf', 'constructor');
+  t.arrayOf = makeFuncType('arrayOf', 'elementType');
+  t.objectOf = makeFuncType('objectOf', 'valueType');
+  t.oneOfType = makeFuncType('oneOfType', 'possibleTypes');
+  t.shape = makeFuncType('shape', 'innerTypes');
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+import PropTypes from 'prop-types';
+
+function Test1(props) {
+  return <h1>{props.name}</h1>;
+}Test1.metadata = {
+  props: {
+    name: {
+      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+    },
+    age: {
+      type: _metadataHelpers.number
+    }
+  }
+};
+;
+
+Test1.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number
+};
+
+function Test2(props) {
+  return <h2>{props.hello}</h2>;
+}Test2.metadata = {
+  props: {
+    hello: {
+      type: _metadataHelpers.node
+    },
+    world: {
+      type: _metadataHelpers.bool
+    }
+  }
+};
+;
+
+Test2.propTypes = {
+  hello: PropTypes.node,
+  world: PropTypes.bool
 };"
 `;
 
@@ -480,6 +698,117 @@ function Test(props) {
 Test.propTypes = {
   name: PropTypes.string.isRequired,
   age: PropTypes.number
+};"
+`;
+
+exports[`functional components (function expression) multiple components at top level 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: 'string',
+    required: false
+  };
+  t.number = {
+    type: 'number',
+    required: false
+  };
+  t.bool = {
+    type: 'bool',
+    required: false
+  };
+  t.func = {
+    type: 'func',
+    required: false
+  };
+  t.object = {
+    type: 'object',
+    required: false
+  };
+  t.symbol = {
+    type: 'symbol',
+    required: false
+  };
+  t.array = {
+    type: 'array',
+    required: false
+  };
+  t.node = {
+    type: 'node',
+    required: false
+  };
+  t.element = {
+    type: 'element',
+    required: false
+  };
+  t.any = {
+    type: 'any',
+    required: false
+  };
+  t.oneOf = makeFuncType('oneOf', 'possibleValues');
+  t.instanceOf = makeFuncType('instanceOf', 'constructor');
+  t.arrayOf = makeFuncType('arrayOf', 'elementType');
+  t.objectOf = makeFuncType('objectOf', 'valueType');
+  t.oneOfType = makeFuncType('oneOfType', 'possibleTypes');
+  t.shape = makeFuncType('shape', 'innerTypes');
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+import PropTypes from 'prop-types';
+
+const Test1 = function (props) {
+  return <h1>{props.name}</h1>;
+};
+
+Test1.metadata = {
+  props: {
+    name: {
+      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+    },
+    age: {
+      type: _metadataHelpers.number
+    }
+  }
+};
+Test1.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number
+};
+
+const Test2 = function (props) {
+  return <h2>{props.hello}</h2>;
+};
+
+Test2.metadata = {
+  props: {
+    hello: {
+      type: _metadataHelpers.node
+    },
+    world: {
+      type: _metadataHelpers.bool
+    }
+  }
+};
+Test2.propTypes = {
+  hello: PropTypes.node,
+  world: PropTypes.bool
 };"
 `;
 

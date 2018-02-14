@@ -90,7 +90,27 @@ describe('functional components (arrow expression)', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('multiple components at top level', () => {});
+  test('multiple components at top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      const Test1 = props => <h1>{props.name}</h1>;
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      const Test2 = props => <h2>{props.hello}</h2>;
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 
   test('when exported at the top level', () => {});
 });
@@ -113,7 +133,31 @@ describe('functional components (function expression)', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('multiple components at top level', () => {});
+  test('multiple components at top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      const Test1 = function (props) {
+        return <h1>{props.name}</h1>;
+      };
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      const Test2 = function (props) {
+        return <h2>{props.hello}</h2>;
+      };
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 
   test('when exported at the top level', () => {});
 });
@@ -136,7 +180,31 @@ describe('functional components (function declaration)', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('multiple components at top level', () => {});
+  test('multiple components at top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      function Test1(props) {
+        return <h1>{props.name}</h1>;
+      };
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      function Test2(props) {
+        return <h2>{props.hello}</h2>;
+      };
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 
   test('when exported at the top level', () => {});
 });
@@ -178,7 +246,5 @@ test('metadata property name can be configured', () => {
     })
   ).toMatchSnapshot();
 });
-
-// when renaming proptypes import
 
 // when components declared not at top-level

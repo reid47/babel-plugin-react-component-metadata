@@ -2,16 +2,13 @@ import * as t from 'babel-types';
 import * as u from './ast-utils';
 import buildHelpers from './build-helpers';
 
-const init = (obj, ...fields) => {
+const init = (obj, ...fields) =>
   fields.forEach(field => {
     obj[field] = obj[field] || {};
     obj = obj[field];
   });
-};
 
-const isTopLevel = path => {
-  return path.parent.type === 'Program';
-};
+const isTopLevel = path => path.parent.type === 'Program';
 
 export default () => {
   const defaultOptions = {
@@ -53,11 +50,10 @@ export default () => {
     });
   };
 
-  const buildFakeProps = propsAst => {
+  const buildFakeProps = propsNodes => {
     return u.obj(
-      ...Object.keys(propsAst).map(propName => {
-        const clone = t.cloneDeep(propsAst[propName]);
-        clone.loc = null;
+      ...Object.keys(propsNodes).map(propName => {
+        const clone = t.cloneDeep(propsNodes[propName]);
         return u.objProp(u.id(propName), u.obj(u.objProp(u.id('type'), clone)));
       })
     );

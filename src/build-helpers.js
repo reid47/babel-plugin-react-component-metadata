@@ -65,7 +65,7 @@ const isRequiredNode = u.assignment(
  *
  * ex:
  * function makeFuncType(type, optionsName) {
- *   return function (options) {
+ *   return function(options) {
  *     var opts = {};
  *     opts[optionsName] = options;
  *     return Object.assign({type: type, required: false}, opts);
