@@ -28,6 +28,7 @@ export default () => {
         path.node.name = defaultOptions.helpersName.name;
       }
     },
+
     MemberExpression: path => {
       if (
         (t.isCallExpression(path.node.object) ||

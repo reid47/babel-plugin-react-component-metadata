@@ -30,7 +30,7 @@ import MyComponent from 'path/to/component';
 import formatType from 'some/helper';
 
 const MyComponentDocs = () => {
-  const { props } = MyComponent.__metadata;
+  const { props } = MyComponent.metadata;
 
   return (
     <table>
@@ -55,8 +55,9 @@ const MyComponentDocs = () => {
 };
 ```
 
-This plugin inserts the static field `__propMetadata` on your components and
-populates it with the information it collects.
+This plugin inserts the static field `metadata` on your components and populates
+it with the information it collects (the name of this property is configurable -
+see below).
 
 ## why does this exist?
 
@@ -75,6 +76,8 @@ you'd like to help add features or otherwise improve this plugin, PRs are
 welcome!
 
 ## how do I use it?
+
+### requirements
 
 ### plugin options
 
