@@ -8,7 +8,7 @@ to generate documentation.
 For example, you might have a component like this:
 
 ```jsx
-const MyComponent = ({ firstName }) => {
+const MyComponent = ({ firstName = 'Mx.', lastName }) => {
   return (
     <h1>
       Hello, {firstName} {lastName}!
@@ -17,7 +17,7 @@ const MyComponent = ({ firstName }) => {
 };
 
 MyComponent.propTypes = {
-  firstName: PropTypes.string.isRequired,
+  firstName: PropTypes.string,
   lastName: PropTypes.string.isRequired
 };
 ```
