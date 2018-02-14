@@ -3,23 +3,15 @@ import plugin from '../src';
 
 const transform = (example, options) => {
   const { code } = babel.transform(example, {
-    plugins: ['syntax-jsx', options ? [plugin, options] : plugin]
+    plugins: [
+      'syntax-class-properties',
+      'syntax-jsx',
+      options ? [plugin, options] : plugin
+    ]
   });
 
   return code;
 };
-
-test('when no React components found', () => {
-  const example = `
-    import SomethingElse from 'something-else';
-    const Hmm = require('hmmm');
-
-    var foo = 1;
-    if (foo) console.log(foo);
-  `;
-
-  expect(transform(example)).toMatchSnapshot();
-});
 
 describe('ES6 classes without static properties', () => {
   test('simple example', () => {
@@ -66,6 +58,63 @@ describe('ES6 classes without static properties', () => {
         hello: PropTypes.node,
         world: PropTypes.bool
       };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
+
+  test('when exported at the top level', () => {});
+});
+
+describe('ES6 classes with static properties', () => {
+  test('simple example', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      class Test extends React.Component {
+        static propTypes = {
+          name: PropTypes.string.isRequired,
+          age: PropTypes.number
+        };
+
+        onClick = () => {
+          console.log('This should be ignored.');
+        }
+
+        render() {
+          return <h1>{this.props.name}</h1>;
+        }
+      }
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
+
+  test('multiple components at top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      class Test1 extends React.Component {
+        static propTypes = {
+          name: PropTypes.string.isRequired,
+          age: PropTypes.number
+        };
+
+        render() {
+          return <h1>{this.props.name}</h1>;
+        }
+      }
+
+      class Test2 extends React.Component {
+        static propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+        };
+
+        render() {
+          return <h2>{this.props.hello}</h2>;
+        }
+      }
     `;
 
     expect(transform(example)).toMatchSnapshot();
@@ -211,40 +260,124 @@ describe('functional components (function declaration)', () => {
 
 test('PropTypes can be imported under a different name', () => {
   const example = `
-      import t from 'prop-types';
+    import t from 'prop-types';
 
-      function Test(props) {
-        return <h1>{props.name}</h1>;
-      };
+    function Test(props) {
+      return <h1>{props.name}</h1>;
+    };
 
-      Test.propTypes = {
-        name: t.string.isRequired,
-        age: t.number
-      };
-    `;
+    Test.propTypes = {
+      name: t.string.isRequired,
+      age: t.number
+    };
+  `;
 
   expect(transform(example)).toMatchSnapshot();
 });
 
 test('metadata property name can be configured', () => {
   const example = `
-      import t from 'prop-types';
+    import t from 'prop-types';
 
-      function Test(props) {
-        return <h1>{props.name}</h1>;
-      };
+    function Test(props) {
+      return <h1>{props.name}</h1>;
+    };
 
-      Test.propTypes = {
-        name: t.string.isRequired,
-        age: t.number
-      };
-    `;
+    Test.propTypes = {
+      name: t.string.isRequired,
+      age: t.number
+    };
+  `;
 
   expect(
     transform(example, {
       metadataPropertyName: '__customMetadata'
     })
   ).toMatchSnapshot();
+});
+
+test('helpers name is always unique', () => {
+  const example = `
+    import t from 'prop-types';
+
+    const metadataHelpers = 'some other variable...';
+
+    function Test(props) {
+      return <h1>{props.name}</h1>;
+    };
+
+    Test.propTypes = {
+      name: t.string.isRequired,
+      age: t.number
+    };
+  `;
+
+  expect(transform(example)).toMatchSnapshot();
+});
+
+test('when no components found at all', () => {
+  const example = `
+    import SomethingElse from 'something-else';
+    import { someNonDefaultExport } from 'prop-types';
+    const Hmm = require('hmmm');
+
+    module = "This should be ignored."
+    SomethingElse.aProperty = "This should also be ignored.";
+
+    var foo = 1;
+    if (foo) console.log(foo);
+    console.log('This will be ignored.');
+
+    class NotAComponent extends SomethingElse {
+      static notPropTypes = 47;
+      static propTypes = "A string property called propTypes?";
+
+      method1() {
+        console.log('hello!')
+      }
+    }
+  `;
+
+  expect(transform(example)).toMatchSnapshot();
+});
+
+test('when no components found at top level', () => {
+  const example = `
+    import PropTypes from 'prop-types';
+
+    function wrapperFunction() {
+      const InnerComponent1 = () => <h1>hello, world</h1>;
+      InnerComponent1.propTypes = {
+        test: PropTypes.string
+      };
+
+      const InnerComponent2 = function() {
+        return <h1>hello, world</h1>;
+      }
+      InnerComponent2.propTypes = {
+        test: PropTypes.string
+      };
+
+      function InnerComponent3() {
+        return <h1>hello, world</h1>;
+      }
+      InnerComponent3.propTypes = {
+        test: PropTypes.string
+      };
+
+      class InnerComponent4 extends React.Component {
+        static propTypes = {
+          test: PropTypes.string
+        };
+
+        render() {
+          return <h1>hello, world</h1>;
+        }
+      }
+    }
+  `;
+
+  expect(transform(example)).toMatchSnapshot();
 });
 
 // when components declared not at top-level

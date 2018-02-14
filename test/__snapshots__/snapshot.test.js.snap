@@ -1,5 +1,218 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ES6 classes with static properties multiple components at top level 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: 'string',
+    required: false
+  };
+  t.number = {
+    type: 'number',
+    required: false
+  };
+  t.bool = {
+    type: 'bool',
+    required: false
+  };
+  t.func = {
+    type: 'func',
+    required: false
+  };
+  t.object = {
+    type: 'object',
+    required: false
+  };
+  t.symbol = {
+    type: 'symbol',
+    required: false
+  };
+  t.array = {
+    type: 'array',
+    required: false
+  };
+  t.node = {
+    type: 'node',
+    required: false
+  };
+  t.element = {
+    type: 'element',
+    required: false
+  };
+  t.any = {
+    type: 'any',
+    required: false
+  };
+  t.oneOf = makeFuncType('oneOf', 'possibleValues');
+  t.instanceOf = makeFuncType('instanceOf', 'constructor');
+  t.arrayOf = makeFuncType('arrayOf', 'elementType');
+  t.objectOf = makeFuncType('objectOf', 'valueType');
+  t.oneOfType = makeFuncType('oneOfType', 'possibleTypes');
+  t.shape = makeFuncType('shape', 'innerTypes');
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+import PropTypes from 'prop-types';
+
+class Test1 extends React.Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    age: PropTypes.number
+  };
+
+  render() {
+    return <h1>{this.props.name}</h1>;
+  }
+}
+
+Test1.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.isRequired(metadataHelpers.string)
+    },
+    age: {
+      type: metadataHelpers.number
+    }
+  }
+};
+class Test2 extends React.Component {
+  static propTypes = {
+    hello: PropTypes.node,
+    world: PropTypes.bool
+  };
+
+  render() {
+    return <h2>{this.props.hello}</h2>;
+  }
+}
+Test2.metadata = {
+  props: {
+    hello: {
+      type: metadataHelpers.node
+    },
+    world: {
+      type: metadataHelpers.bool
+    }
+  }
+};"
+`;
+
+exports[`ES6 classes with static properties simple example 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: 'string',
+    required: false
+  };
+  t.number = {
+    type: 'number',
+    required: false
+  };
+  t.bool = {
+    type: 'bool',
+    required: false
+  };
+  t.func = {
+    type: 'func',
+    required: false
+  };
+  t.object = {
+    type: 'object',
+    required: false
+  };
+  t.symbol = {
+    type: 'symbol',
+    required: false
+  };
+  t.array = {
+    type: 'array',
+    required: false
+  };
+  t.node = {
+    type: 'node',
+    required: false
+  };
+  t.element = {
+    type: 'element',
+    required: false
+  };
+  t.any = {
+    type: 'any',
+    required: false
+  };
+  t.oneOf = makeFuncType('oneOf', 'possibleValues');
+  t.instanceOf = makeFuncType('instanceOf', 'constructor');
+  t.arrayOf = makeFuncType('arrayOf', 'elementType');
+  t.objectOf = makeFuncType('objectOf', 'valueType');
+  t.oneOfType = makeFuncType('oneOfType', 'possibleTypes');
+  t.shape = makeFuncType('shape', 'innerTypes');
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+import PropTypes from 'prop-types';
+
+class Test extends React.Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    age: PropTypes.number
+  };
+
+  onClick = () => {
+    console.log('This should be ignored.');
+  };
+
+  render() {
+    return <h1>{this.props.name}</h1>;
+  }
+}
+Test.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.isRequired(metadataHelpers.string)
+    },
+    age: {
+      type: metadataHelpers.number
+    }
+  }
+};"
+`;
+
 exports[`ES6 classes without static properties multiple components at top level 1`] = `
 "var _metadataHelpers = function () {
   function makeFuncType(type, optionsName) {
@@ -81,10 +294,10 @@ class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -102,10 +315,10 @@ class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      type: metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      type: metadataHelpers.bool
     }
   }
 };
@@ -196,10 +409,10 @@ class Test extends React.Component {
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -286,10 +499,10 @@ function Test(props) {
 }Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -378,10 +591,10 @@ const Test1 = props => <h1>{props.name}</h1>;
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -395,10 +608,10 @@ const Test2 = props => <h2>{props.hello}</h2>;
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      type: metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      type: metadataHelpers.bool
     }
   }
 };
@@ -485,10 +698,10 @@ const Test = props => <h1>{props.name}</h1>;
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -575,10 +788,10 @@ function Test1(props) {
 }Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -594,10 +807,10 @@ function Test2(props) {
 }Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      type: metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      type: metadataHelpers.bool
     }
   }
 };
@@ -686,10 +899,10 @@ function Test(props) {
 }Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -780,10 +993,10 @@ const Test1 = function (props) {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -799,10 +1012,10 @@ const Test2 = function (props) {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      type: metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      type: metadataHelpers.bool
     }
   }
 };
@@ -891,16 +1104,110 @@ const Test = function (props) {
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
 Test.propTypes = {
   name: PropTypes.string.isRequired,
   age: PropTypes.number
+};"
+`;
+
+exports[`helpers name is always unique 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: 'string',
+    required: false
+  };
+  t.number = {
+    type: 'number',
+    required: false
+  };
+  t.bool = {
+    type: 'bool',
+    required: false
+  };
+  t.func = {
+    type: 'func',
+    required: false
+  };
+  t.object = {
+    type: 'object',
+    required: false
+  };
+  t.symbol = {
+    type: 'symbol',
+    required: false
+  };
+  t.array = {
+    type: 'array',
+    required: false
+  };
+  t.node = {
+    type: 'node',
+    required: false
+  };
+  t.element = {
+    type: 'element',
+    required: false
+  };
+  t.any = {
+    type: 'any',
+    required: false
+  };
+  t.oneOf = makeFuncType('oneOf', 'possibleValues');
+  t.instanceOf = makeFuncType('instanceOf', 'constructor');
+  t.arrayOf = makeFuncType('arrayOf', 'elementType');
+  t.objectOf = makeFuncType('objectOf', 'valueType');
+  t.oneOfType = makeFuncType('oneOfType', 'possibleTypes');
+  t.shape = makeFuncType('shape', 'innerTypes');
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+import t from 'prop-types';
+
+const metadataHelpers = 'some other variable...';
+
+function Test(props) {
+  return <h1>{props.name}</h1>;
+}Test.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.isRequired(metadataHelpers.string)
+    },
+    age: {
+      type: metadataHelpers.number
+    }
+  }
+};
+;
+
+Test.propTypes = {
+  name: t.string.isRequired,
+  age: t.number
 };"
 `;
 
@@ -981,10 +1288,10 @@ function Test(props) {
 }Test.__customMetadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      type: metadataHelpers.isRequired(metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      type: metadataHelpers.number
     }
   }
 };
@@ -996,11 +1303,61 @@ Test.propTypes = {
 };"
 `;
 
-exports[`when no React components found 1`] = `
+exports[`when no components found at all 1`] = `
 "
 import SomethingElse from 'something-else';
+import { someNonDefaultExport } from 'prop-types';
 const Hmm = require('hmmm');
 
+module = \\"This should be ignored.\\";
+SomethingElse.aProperty = \\"This should also be ignored.\\";
+
 var foo = 1;
-if (foo) console.log(foo);"
+if (foo) console.log(foo);
+console.log('This will be ignored.');
+
+class NotAComponent extends SomethingElse {
+  static notPropTypes = 47;
+  static propTypes = \\"A string property called propTypes?\\";
+
+  method1() {
+    console.log('hello!');
+  }
+}"
+`;
+
+exports[`when no components found at top level 1`] = `
+"
+import PropTypes from 'prop-types';
+
+function wrapperFunction() {
+  const InnerComponent1 = () => <h1>hello, world</h1>;
+  InnerComponent1.propTypes = {
+    test: PropTypes.string
+  };
+
+  const InnerComponent2 = function () {
+    return <h1>hello, world</h1>;
+  };
+  InnerComponent2.propTypes = {
+    test: PropTypes.string
+  };
+
+  function InnerComponent3() {
+    return <h1>hello, world</h1>;
+  }
+  InnerComponent3.propTypes = {
+    test: PropTypes.string
+  };
+
+  class InnerComponent4 extends React.Component {
+    static propTypes = {
+      test: PropTypes.string
+    };
+
+    render() {
+      return <h1>hello, world</h1>;
+    }
+  }
+}"
 `;

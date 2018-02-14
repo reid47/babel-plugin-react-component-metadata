@@ -111,9 +111,9 @@ const makeFuncTypeNode = t.functionDeclaration(
  *   // see other comments
  * })();
  */
-export default helperName => {
+export default helperNameId => {
   return u.varDec(
-    helperName,
+    helperNameId,
     t.callExpression(
       t.functionExpression(
         null,

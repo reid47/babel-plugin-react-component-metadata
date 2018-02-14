@@ -1,6 +1,9 @@
 import * as t from 'babel-types';
 import * as u from './ast-utils';
 import buildHelpers from './build-helpers';
+import helpersVisitor from './helpers-visitor';
+import createMetadataNode from './create-metadata-node';
+import { getOption, setOption } from './options';
 
 const init = (obj, ...fields) =>
   fields.forEach(field => {
@@ -11,36 +14,7 @@ const init = (obj, ...fields) =>
 const isTopLevel = path => path.parent.type === 'Program';
 
 export default () => {
-  const defaultOptions = {
-    propTypesAlias: 'PropTypes',
-    metadataPropertyName: 'metadata',
-    helpersName: u.id('metadataHelpers')
-  };
-
-  const renameVisitor = {
-    Identifier(path, state) {
-      if (path.node.name === defaultOptions.propTypesAlias) {
-        path.node.name = defaultOptions.helpersName.name;
-      }
-    },
-
-    MemberExpression(path, state) {
-      if (
-        (t.isCallExpression(path.node.object) ||
-          t.isMemberExpression(path.node.object)) &&
-        t.isIdentifier(path.node.property, { name: 'isRequired' })
-      ) {
-        path.replaceWith(
-          t.callExpression(
-            u.member(defaultOptions.helpersName, u.id('isRequired')),
-            [path.node.object]
-          )
-        );
-      }
-    }
-  };
-
-  const collectPropTypes = (propMetadata, objExp) => {
+  const collectPropTypes = (propMetadata, objExp) =>
     objExp.properties.forEach(propNode => {
       if (!t.isIdentifier(propNode.key)) return;
       const propName = propNode.key.name;
@@ -48,29 +22,18 @@ export default () => {
       init(propMetadata, propName);
       propMetadata[propName] = propNode.value;
     });
-  };
-
-  const buildFakeProps = propsNodes => {
-    return u.obj(
-      ...Object.keys(propsNodes).map(propName => {
-        const clone = t.cloneDeep(propsNodes[propName]);
-        return u.objProp(u.id(propName), u.obj(u.objProp(u.id('type'), clone)));
-      })
-    );
-  };
 
   return {
     visitor: {
       ImportDeclaration(path, state) {
-        if (!isTopLevel(path)) return;
         if (path.node.source.value !== 'prop-types') return;
 
-        const defaultImportSpecifier = path.node.specifiers.filter(s =>
+        const defaultImport = path.node.specifiers.filter(s =>
           t.isImportDefaultSpecifier(s)
         )[0];
-        if (!defaultImportSpecifier) return;
+        if (!defaultImport) return;
 
-        defaultOptions.propTypesAlias = defaultImportSpecifier.local.name;
+        setOption('propTypesAlias', defaultImport.local.name);
       },
 
       ClassDeclaration(path, state) {
@@ -109,8 +72,7 @@ export default () => {
         const parentClassName = parentClassDecl.node.id.name;
         if (!state.knownComponents[parentClassName]) return;
 
-        init(state.knownComponents, parentClassName, 'props');
-        //state.knownComponents[parentClassName].path = path.node.value;
+        init(state.knownComponents[parentClassName], 'props');
         collectPropTypes(
           state.knownComponents[parentClassName].props,
           staticPropVal
@@ -121,12 +83,10 @@ export default () => {
         if (!isTopLevel(path)) return;
         if (!t.isAssignmentExpression(path.node.expression)) return;
 
-        const left = path.node.expression.left;
+        const { left, right } = path.node.expression;
         if (!t.isMemberExpression(left)) return;
-        if (left.property.name !== 'propTypes') return;
-
-        const right = path.node.expression.right;
         if (!t.isObjectExpression(right)) return;
+        if (left.property.name !== 'propTypes') return;
 
         const componentName = left.object.name;
         init(state.knownComponents, componentName, 'props');
@@ -139,38 +99,27 @@ export default () => {
         },
 
         exit(path, state) {
-          defaultOptions.helpersName = path.scope.generateUidIdentifierBasedOnNode(
-            defaultOptions.helpersName
-          );
-
-          if (Object.keys(state.knownComponents).length) {
-            path.unshiftContainer(
-              'body',
-              buildHelpers(defaultOptions.helpersName)
-            );
-          }
+          let insertedHelpers = false;
 
           Object.keys(state.knownComponents).forEach(c => {
             const componentPath = state.knownComponents[c].path;
             const componentProps = state.knownComponents[c].props;
 
             if (componentPath && componentProps) {
+              if (!insertedHelpers) {
+                const helpersName = path.scope.generateUidIdentifierBasedOnNode(
+                  getOption(state, 'helpersName')
+                );
+
+                path.unshiftContainer('body', buildHelpers(helpersName));
+                insertedHelpers = true;
+              }
+
               const newPath = componentPath.insertAfter(
-                u.assignment(
-                  u.member(
-                    u.id(c),
-                    u.id(
-                      state.opts.metadataPropertyName ||
-                        defaultOptions.metadataPropertyName
-                    )
-                  ),
-                  u.obj(
-                    u.objProp(u.id('props'), buildFakeProps(componentProps))
-                  )
-                )
+                createMetadataNode(c, componentProps, state)
               )[0];
 
-              newPath.traverse(renameVisitor);
+              newPath.traverse(helpersVisitor, state);
             }
           });
         }

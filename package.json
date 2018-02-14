@@ -1,8 +1,7 @@
 {
   "name": "babel-plugin-react-component-metadata",
   "version": "1.0.0",
-  "description":
-    "Babel plugin to collect metadata from React components to help with generating documentation",
+  "description": "Babel plugin to collect metadata from React components to help with generating documentation",
   "main": "index.js",
   "author": "Reid Mitchell",
   "license": "MIT",
@@ -15,6 +14,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^22.2.2",
+    "babel-plugin-syntax-class-properties": "^6.13.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-preset-env": "^1.6.1",
     "jest": "^22.2.2"
