@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "prepublish": "npm run build"
   },
   "files": ["dist"],
   "dependencies": {
