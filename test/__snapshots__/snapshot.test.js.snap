@@ -91,6 +91,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 class Test2 extends React.Component {
@@ -111,6 +114,9 @@ Test2.metadata = {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };"
 `;
@@ -209,6 +215,9 @@ Test.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };"
 `;
@@ -304,6 +313,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 export default class Test2 extends React.Component {
@@ -324,6 +336,9 @@ Test2.metadata = {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };"
 `;
@@ -414,6 +429,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test1.propTypes = {
@@ -435,6 +453,9 @@ Test2.metadata = {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test2.propTypes = {
@@ -529,6 +550,9 @@ Test.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test.propTypes = {
@@ -623,6 +647,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test1.propTypes = {
@@ -644,6 +671,9 @@ Test2.metadata = {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test2.propTypes = {
@@ -734,6 +764,9 @@ function Test(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -826,6 +859,9 @@ function Test(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -918,6 +954,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test1.propTypes = {
@@ -935,6 +974,9 @@ Test2.metadata = {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test2.propTypes = {
@@ -1025,6 +1067,9 @@ Test.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test.propTypes = {
@@ -1115,6 +1160,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test1.propTypes = {
@@ -1212,6 +1260,9 @@ function Test1(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -1231,6 +1282,9 @@ function Test2(props) {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -1323,6 +1377,9 @@ function Test(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -1415,6 +1472,9 @@ export function Test1(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -1434,6 +1494,9 @@ export default function Test2(props) {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -1528,6 +1591,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test1.propTypes = {
@@ -1547,6 +1613,9 @@ Test2.metadata = {
     world: {
       type: metadataHelpers.bool
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test2.propTypes = {
@@ -1639,6 +1708,9 @@ Test.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test.propTypes = {
@@ -1731,6 +1803,9 @@ Test1.metadata = {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 Test1.propTypes = {
@@ -1832,6 +1907,9 @@ function Test(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;
@@ -1924,6 +2002,9 @@ function Test(props) {
     age: {
       type: metadataHelpers.number
     }
+  },
+  comments: {
+    hasComments: false
   }
 };
 ;

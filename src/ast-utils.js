@@ -11,7 +11,7 @@ export const member = (obj, prop, computed) =>
 
 export const objProp = (prop, val) => t.objectProperty(prop, val);
 
-export const obj = (...objProps) => t.objectExpression(objProps);
+export const obj = (...objProps) => t.objectExpression(objProps.filter(i => i));
 
 export const varDec = (id, value) =>
   t.variableDeclaration('var', [t.variableDeclarator(id, value)]);

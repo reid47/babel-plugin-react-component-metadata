@@ -3,6 +3,7 @@ import * as u from './ast-utils';
 import buildHelpers from './build-helpers';
 import helpersVisitor from './helpers-visitor';
 import createMetadataNode from './create-metadata-node';
+import collectComments from './comments';
 import { getOption, setOption } from './options';
 
 const init = (obj, ...fields) =>
@@ -35,8 +36,12 @@ export default () => ({
     ClassDeclaration(path, state) {
       if (!u.isTopLevelOrExported(path)) return;
 
-      init(state.knownComponents, path.node.id.name);
-      state.knownComponents[path.node.id.name].path = u.isExported(path)
+      const componentName = path.node.id.name;
+      init(state.knownComponents, componentName);
+      state.knownComponents[componentName].comments = collectComments(
+        path.node
+      );
+      state.knownComponents[componentName].path = u.isExported(path)
         ? path.parentPath
         : path;
     },
@@ -44,8 +49,12 @@ export default () => ({
     FunctionDeclaration(path, state) {
       if (!u.isTopLevelOrExported(path)) return;
 
-      init(state.knownComponents, path.node.id.name);
-      state.knownComponents[path.node.id.name].path = u.isExported(path)
+      const componentName = path.node.id.name;
+      init(state.knownComponents, componentName);
+      state.knownComponents[componentName].comments = collectComments(
+        path.node
+      );
+      state.knownComponents[componentName].path = u.isExported(path)
         ? path.parentPath
         : path;
     },
@@ -55,7 +64,6 @@ export default () => ({
 
       const declarator = path.node.declarations[0];
 
-      // Special case for, e.g. const t = require('prop-types');
       if (u.isRequirePropTypes(declarator.init)) {
         setOption('propTypesAlias', declarator.id.name);
         return;
@@ -63,8 +71,12 @@ export default () => ({
 
       if (!t.isFunction(declarator.init)) return;
 
-      init(state.knownComponents, declarator.id.name);
-      state.knownComponents[declarator.id.name].path = u.isExported(path)
+      const componentName = declarator.id.name;
+      init(state.knownComponents, componentName);
+      state.knownComponents[componentName].comments = collectComments(
+        path.node
+      );
+      state.knownComponents[componentName].path = u.isExported(path)
         ? path.parentPath
         : path;
     },
@@ -111,7 +123,8 @@ export default () => ({
         let insertedHelpers = false;
 
         Object.keys(state.knownComponents).forEach(componentName => {
-          const { path, props } = state.knownComponents[componentName];
+          const componentMetadata = state.knownComponents[componentName];
+          const { path, props, comments } = componentMetadata;
 
           if (path && props) {
             if (!insertedHelpers) {
@@ -124,7 +137,7 @@ export default () => ({
             }
 
             const newPath = path.insertAfter(
-              createMetadataNode(componentName, props, state)
+              createMetadataNode(componentName, props, comments, state)
             )[0];
 
             newPath.traverse(helpersVisitor, state);
