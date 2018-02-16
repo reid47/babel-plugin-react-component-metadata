@@ -12,6 +12,9 @@ const init = (obj, ...fields) =>
   });
 
 const isTopLevel = path => path.parent.type === 'Program';
+const isExported = path =>
+  path.parent.type === 'ExportNamedDeclaration' ||
+  path.parent.type === 'ExportDefaultDeclaration';
 
 export default () => {
   const collectPropTypes = (propMetadata, objExp) =>
@@ -37,27 +40,33 @@ export default () => {
       },
 
       ClassDeclaration(path, state) {
-        if (!isTopLevel(path)) return;
+        if (!(isTopLevel(path) || isExported(path))) return;
 
         init(state.knownComponents, path.node.id.name);
-        state.knownComponents[path.node.id.name].path = path;
+        state.knownComponents[path.node.id.name].path = isExported(path)
+          ? path.parentPath
+          : path;
       },
 
       FunctionDeclaration(path, state) {
-        if (!isTopLevel(path)) return;
+        if (!(isTopLevel(path) || isExported(path))) return;
 
         init(state.knownComponents, path.node.id.name);
-        state.knownComponents[path.node.id.name].path = path;
+        state.knownComponents[path.node.id.name].path = isExported(path)
+          ? path.parentPath
+          : path;
       },
 
       VariableDeclaration(path, state) {
-        if (!isTopLevel(path)) return;
+        if (!(isTopLevel(path) || isExported(path))) return;
 
         const declarator = path.node.declarations[0];
         if (!t.isFunction(declarator.init)) return;
 
         init(state.knownComponents, declarator.id.name);
-        state.knownComponents[declarator.id.name].path = path;
+        state.knownComponents[declarator.id.name].path = isExported(path)
+          ? path.parentPath
+          : path;
       },
 
       ClassProperty(path, state) {

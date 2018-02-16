@@ -63,7 +63,35 @@ describe('ES6 classes without static properties', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('when exported at the top level', () => {});
+  test('when exported at the top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      export class Test1 extends React.Component {
+        render() {
+          return <h1>{this.props.name}</h1>;
+        }
+      }
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      export default class Test2 extends React.Component {
+        render() {
+          return <h2>{this.props.hello}</h2>;
+        }
+      }
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 });
 
 describe('ES6 classes with static properties', () => {
@@ -120,7 +148,35 @@ describe('ES6 classes with static properties', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('when exported at the top level', () => {});
+  test('when exported at the top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      export class Test1 extends React.Component {
+        static propTypes = {
+          name: PropTypes.string.isRequired,
+          age: PropTypes.number
+        };
+
+        render() {
+          return <h1>{this.props.name}</h1>;
+        }
+      }
+
+      export default class Test2 extends React.Component {
+        static propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+        };
+
+        render() {
+          return <h2>{this.props.hello}</h2>;
+        }
+      }
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 });
 
 describe('functional components (arrow expression)', () => {
@@ -161,7 +217,27 @@ describe('functional components (arrow expression)', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('when exported at the top level', () => {});
+  test('when exported at the top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      export const Test1 = props => <h1>{props.name}</h1>;
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      export default Test2 = props => <h2>{props.hello}</h2>;
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 });
 
 describe('functional components (function expression)', () => {
@@ -208,7 +284,31 @@ describe('functional components (function expression)', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('when exported at the top level', () => {});
+  test('when exported at the top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      export const Test1 = function (props) {
+        return <h1>{props.name}</h1>;
+      };
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      export default Test2 = function (props) {
+        return <h2>{props.hello}</h2>;
+      };
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 });
 
 describe('functional components (function declaration)', () => {
@@ -255,7 +355,31 @@ describe('functional components (function declaration)', () => {
     expect(transform(example)).toMatchSnapshot();
   });
 
-  test('when exported at the top level', () => {});
+  test('when exported at the top level', () => {
+    const example = `
+      import PropTypes from 'prop-types';
+
+      export function Test1(props) {
+        return <h1>{props.name}</h1>;
+      };
+
+      Test1.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+      };
+
+      export default function Test2(props) {
+        return <h2>{props.hello}</h2>;
+      };
+
+      Test2.propTypes = {
+        hello: PropTypes.node,
+        world: PropTypes.bool
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
 });
 
 test('PropTypes can be imported under a different name', () => {
@@ -379,5 +503,3 @@ test('when no components found at top level', () => {
 
   expect(transform(example)).toMatchSnapshot();
 });
-
-// when components declared not at top-level
