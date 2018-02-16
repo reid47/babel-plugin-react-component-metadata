@@ -82,3 +82,45 @@ welcome!
 ### plugin options
 
 ## how does it work?
+
+Behind the scenes, this plugin is leveraging the information Babel knows about your source code to help you document your components. Babel handles the parsing of your code into an abstract syntax tree and (eventually) prints your AST back out as transformed code. This plugin examines the syntax tree in the middle and inserts some addtional nodes containing extra information, so that when the code is generated again, it contains this new info.
+
+For example, if you wrote code defining a component like this:
+
+```jsx
+class Heading extends React.Component {
+  static propTypes = {
+    text: PropTypes.string.isRequired
+  };
+
+  render() {
+    return <h1>{this.props.text}</h1>;
+  }
+}
+```
+
+...it would be transformed into code that looks something like this:
+
+```jsx
+// A tiny library inserted into your code to dynamically
+// expose prop-types info
+var metadataHelper = ...
+
+class Heading extends React.Component {
+  static propTypes = {
+    text: PropTypes.string.isRequired
+  };
+
+  render() {
+    return <h1>{this.props.text}</h1>;
+  }
+}
+
+Heading.metadata = {
+  props: {
+    text: metadataHelper.isRequired(metadataHelper.string)
+  }
+};
+```
+
+...and then, as shown above, you could import `Heading` elsewhere and access `Heading.metadata.props` to see the prop information.
