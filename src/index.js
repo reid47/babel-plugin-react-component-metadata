@@ -11,19 +11,6 @@ const init = (obj, ...fields) =>
     obj = obj[field];
   });
 
-const isTopLevel = path => path.parent.type === 'Program';
-
-const isExported = path =>
-  path.parent.type === 'ExportNamedDeclaration' ||
-  path.parent.type === 'ExportDefaultDeclaration';
-
-const isTopLevelOrExported = path => isTopLevel(path) || isExported(path);
-
-const isRequirePropTypes = node =>
-  t.isCallExpression(node) &&
-  t.isIdentifier(node.callee, { name: 'require' }) &&
-  t.isStringLiteral(node.arguments[0], { value: 'prop-types' });
-
 const collectPropTypes = (propMetadata, objExp) =>
   objExp.properties.forEach(propNode => {
     if (!t.isIdentifier(propNode.key)) return;
@@ -46,30 +33,30 @@ export default () => ({
     },
 
     ClassDeclaration(path, state) {
-      if (!isTopLevelOrExported(path)) return;
+      if (!u.isTopLevelOrExported(path)) return;
 
       init(state.knownComponents, path.node.id.name);
-      state.knownComponents[path.node.id.name].path = isExported(path)
+      state.knownComponents[path.node.id.name].path = u.isExported(path)
         ? path.parentPath
         : path;
     },
 
     FunctionDeclaration(path, state) {
-      if (!isTopLevelOrExported(path)) return;
+      if (!u.isTopLevelOrExported(path)) return;
 
       init(state.knownComponents, path.node.id.name);
-      state.knownComponents[path.node.id.name].path = isExported(path)
+      state.knownComponents[path.node.id.name].path = u.isExported(path)
         ? path.parentPath
         : path;
     },
 
     VariableDeclaration(path, state) {
-      if (!isTopLevelOrExported(path)) return;
+      if (!u.isTopLevelOrExported(path)) return;
 
       const declarator = path.node.declarations[0];
 
       // Special case for, e.g. const t = require('prop-types');
-      if (isRequirePropTypes(declarator.init)) {
+      if (u.isRequirePropTypes(declarator.init)) {
         setOption('propTypesAlias', declarator.id.name);
         return;
       }
@@ -77,7 +64,7 @@ export default () => ({
       if (!t.isFunction(declarator.init)) return;
 
       init(state.knownComponents, declarator.id.name);
-      state.knownComponents[declarator.id.name].path = isExported(path)
+      state.knownComponents[declarator.id.name].path = u.isExported(path)
         ? path.parentPath
         : path;
     },
@@ -102,7 +89,7 @@ export default () => ({
     },
 
     ExpressionStatement(path, state) {
-      if (!isTopLevel(path)) return;
+      if (!u.isTopLevel(path)) return;
       if (!t.isAssignmentExpression(path.node.expression)) return;
 
       const { left, right } = path.node.expression;

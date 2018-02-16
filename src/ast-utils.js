@@ -18,3 +18,17 @@ export const varDec = (id, value) =>
 
 export const assignment = (left, right) =>
   t.expressionStatement(t.assignmentExpression('=', left, right));
+
+export const isTopLevel = path => path.parent.type === 'Program';
+
+export const isExported = path =>
+  path.parent.type === 'ExportNamedDeclaration' ||
+  path.parent.type === 'ExportDefaultDeclaration';
+
+export const isTopLevelOrExported = path =>
+  isTopLevel(path) || isExported(path);
+
+export const isRequirePropTypes = node =>
+  t.isCallExpression(node) &&
+  t.isIdentifier(node.callee, { name: 'require' }) &&
+  t.isStringLiteral(node.arguments[0], { value: 'prop-types' });
