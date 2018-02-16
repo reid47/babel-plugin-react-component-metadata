@@ -399,6 +399,23 @@ test('PropTypes can be imported under a different name', () => {
   expect(transform(example)).toMatchSnapshot();
 });
 
+test('PropTypes can be required under a different name', () => {
+  const example = `
+    const typ = require('prop-types');
+
+    function Test(props) {
+      return <h1>{props.name}</h1>;
+    };
+
+    Test.propTypes = {
+      name: typ.string.isRequired,
+      age: typ.number
+    };
+  `;
+
+  expect(transform(example)).toMatchSnapshot();
+});
+
 test('metadata property name can be configured', () => {
   const example = `
     import t from 'prop-types';

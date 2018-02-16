@@ -19,6 +19,11 @@ const isExported = path =>
 
 const isTopLevelOrExported = path => isTopLevel(path) || isExported(path);
 
+const isRequirePropTypes = node =>
+  t.isCallExpression(node) &&
+  t.isIdentifier(node.callee, { name: 'require' }) &&
+  t.isStringLiteral(node.arguments[0], { value: 'prop-types' });
+
 const collectPropTypes = (propMetadata, objExp) =>
   objExp.properties.forEach(propNode => {
     if (!t.isIdentifier(propNode.key)) return;
@@ -62,6 +67,13 @@ export default () => ({
       if (!isTopLevelOrExported(path)) return;
 
       const declarator = path.node.declarations[0];
+
+      // Special case for, e.g. const t = require('prop-types');
+      if (isRequirePropTypes(declarator.init)) {
+        setOption('propTypesAlias', declarator.id.name);
+        return;
+      }
+
       if (!t.isFunction(declarator.init)) return;
 
       init(state.knownComponents, declarator.id.name);

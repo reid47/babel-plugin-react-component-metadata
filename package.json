@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-react-component-metadata",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description":
     "Babel plugin to collect metadata from React components to help with generating documentation",
   "main": "index.js",
