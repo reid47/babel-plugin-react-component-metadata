@@ -17,6 +17,8 @@ const isExported = path =>
   path.parent.type === 'ExportNamedDeclaration' ||
   path.parent.type === 'ExportDefaultDeclaration';
 
+const isTopLevelOrExported = path => isTopLevel(path) || isExported(path);
+
 const collectPropTypes = (propMetadata, objExp) =>
   objExp.properties.forEach(propNode => {
     if (!t.isIdentifier(propNode.key)) return;
@@ -34,13 +36,12 @@ export default () => ({
       const defaultImport = path.node.specifiers.filter(s =>
         t.isImportDefaultSpecifier(s)
       )[0];
-      if (!defaultImport) return;
 
-      setOption('propTypesAlias', defaultImport.local.name);
+      if (defaultImport) setOption('propTypesAlias', defaultImport.local.name);
     },
 
     ClassDeclaration(path, state) {
-      if (!(isTopLevel(path) || isExported(path))) return;
+      if (!isTopLevelOrExported(path)) return;
 
       init(state.knownComponents, path.node.id.name);
       state.knownComponents[path.node.id.name].path = isExported(path)
@@ -49,7 +50,7 @@ export default () => ({
     },
 
     FunctionDeclaration(path, state) {
-      if (!(isTopLevel(path) || isExported(path))) return;
+      if (!isTopLevelOrExported(path)) return;
 
       init(state.knownComponents, path.node.id.name);
       state.knownComponents[path.node.id.name].path = isExported(path)
@@ -58,7 +59,7 @@ export default () => ({
     },
 
     VariableDeclaration(path, state) {
-      if (!(isTopLevel(path) || isExported(path))) return;
+      if (!isTopLevelOrExported(path)) return;
 
       const declarator = path.node.declarations[0];
       if (!t.isFunction(declarator.init)) return;
@@ -107,25 +108,24 @@ export default () => ({
         state.knownComponents = {};
       },
 
-      exit(path, state) {
+      exit(programPath, state) {
         let insertedHelpers = false;
 
-        Object.keys(state.knownComponents).forEach(c => {
-          const componentPath = state.knownComponents[c].path;
-          const componentProps = state.knownComponents[c].props;
+        Object.keys(state.knownComponents).forEach(componentName => {
+          const { path, props } = state.knownComponents[componentName];
 
-          if (componentPath && componentProps) {
+          if (path && props) {
             if (!insertedHelpers) {
-              const helpersName = path.scope.generateUidIdentifierBasedOnNode(
+              const helpersName = programPath.scope.generateUidIdentifierBasedOnNode(
                 getOption(state, 'helpersName')
               );
 
-              path.unshiftContainer('body', buildHelpers(helpersName));
+              programPath.unshiftContainer('body', buildHelpers(helpersName));
               insertedHelpers = true;
             }
 
-            const newPath = componentPath.insertAfter(
-              createMetadataNode(c, componentProps, state)
+            const newPath = path.insertAfter(
+              createMetadataNode(componentName, props, state)
             )[0];
 
             newPath.traverse(helpersVisitor, state);
