@@ -77,9 +77,85 @@ welcome!
 
 ## how do I use it?
 
-### requirements
+These instructions assume that you're already using Babel for other reasons (e.g. transpiling ES6/JSX into ES5).
+
+First, add this plugin to your `package.json`:
+
+```bash
+yarn add -D babel-plugin-react-component-metadata
+```
+
+...or, if using `npm`:
+
+```bash
+npm i --save-dev babel-plugin-react-component-metadata
+```
+
+Then, in your Babel configuration (e.g. `.babelrc`, or similar), tell Babel to use this plugin:
+
+```json
+{
+  "presets": ["env"],
+  "plugins": [
+    ...
+    "react-component-metadata"
+    ...
+  ]
+}
+```
+
+If you'd like to configure this plugin with custom options (see below), pass the options in like this:
+
+```json
+{
+  "presets": ["env"],
+  "plugins": [
+    ...
+    ["react-component-metadata", {
+      "metadataPropertyName": "__customMetadataProperty"
+    }]
+    ...
+  ]
+}
+```
 
 ### plugin options
+
+This plugin can take a few options to customize its behavior. They are:
+
+#### `metadataPropertyName` (string, default: 'metadata')
+
+This is the property that will be created on your components containing the metadata. If you specify `metadataPropertyName` to be `"myCustomName"`, you'd access component metadata like this:
+
+```js
+import MyComponent from './path/to/component';
+
+console.log(MyComponent.myCustomName.props);
+```
+
+### requirements
+
+For this plugin to generate metadata for a component, the following must be true:
+
+* The component should be defined at the top level of a file. If it's exported at the top level (e.g. `export class ...`), that works too.
+
+* The component should have some `propTypes` defined for it, either at the top level like this:
+
+```jsx
+SomeComponent.propTypes = {
+  someProp: PropTypes.string.isRequired
+};
+```
+
+...or as a static class property, like this:
+
+```jsx
+class SomeComponent extends React.Component {
+  static propTypes = {
+    someProp: PropTypes.string.isRequired
+  };
+}
+```
 
 ## how does it work?
 
@@ -124,3 +200,7 @@ Heading.metadata = {
 ```
 
 ...and then, as shown above, you could import `Heading` elsewhere and access `Heading.metadata.props` to see the prop information.
+
+## caveats
+
+Since this plugin injects extra code into your components, and since this extra code is only useful in certain situations (e.g. generating documentation), you probably will not want to include it in your default Babel configuration. Instead, use it only for special cases where you know that you'll want to inject the extra information.
