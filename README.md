@@ -95,12 +95,7 @@ Then, in your Babel configuration (e.g. `.babelrc`, or similar), tell Babel to u
 
 ```json
 {
-  "presets": ["env"],
-  "plugins": [
-    ...
-    "react-component-metadata"
-    ...
-  ]
+  "plugins": ["react-component-metadata"]
 }
 ```
 
@@ -108,29 +103,29 @@ If you'd like to configure this plugin with custom options (see below), pass the
 
 ```json
 {
-  "presets": ["env"],
   "plugins": [
-    ...
-    ["react-component-metadata", {
-      "metadataPropertyName": "__customMetadataProperty"
-    }]
-    ...
+    [
+      "react-component-metadata",
+      {
+        "metadataPropertyName": "__customMetadataProperty"
+      }
+    ]
   ]
 }
 ```
 
 ### plugin options
 
-This plugin can take a few options to customize its behavior. They are:
+This plugin can take a few options to customize its behavior.
 
 #### `metadataPropertyName` (string, default: 'metadata')
 
-This is the property that will be created on your components containing the metadata. If you specify `metadataPropertyName` to be `"myCustomName"`, you'd access component metadata like this:
+This is the property that will be created on your components containing the metadata. If you specify `metadataPropertyName` to be `"__customMetadataProperty"`, you'd access component metadata like this:
 
 ```js
 import MyComponent from './path/to/component';
 
-console.log(MyComponent.myCustomName.props);
+console.log(MyComponent.__customMetadataProperty.props);
 ```
 
 ### requirements
@@ -203,4 +198,4 @@ Heading.metadata = {
 
 ## caveats
 
-Since this plugin injects extra code into your components, and since this extra code is only useful in certain situations (e.g. generating documentation), you probably will not want to include it in your default Babel configuration. Instead, use it only for special cases where you know that you'll want to inject the extra information.
+Since this plugin injects extra code into your components, and since this extra code is only useful in certain situations (e.g. when generating documentation), you probably will not want to include it in your default Babel configuration. Instead, use it only for special cases where you know that you'll want to inject the extra information.
