@@ -92,8 +92,7 @@ Test1.metadata = {
       type: metadataHelpers.string
     }
   },
-  comments: {
-    hasComments: true,
+  description: {
     lines: [\\"This is a comment for class Test1\\", \\"with multiple lines.\\"]
   }
 };
@@ -108,8 +107,7 @@ Test2.metadata = {
       type: metadataHelpers.string
     }
   },
-  comments: {
-    hasComments: true,
+  description: {
     lines: [\\"* This is a comment\\", \\"* for class Test2.\\"]
   }
 };
@@ -127,8 +125,7 @@ Test3.metadata = {
       type: metadataHelpers.string
     }
   },
-  comments: {
-    hasComments: true,
+  description: {
     lines: [\\"Comment for Test3\\"]
   }
 };
@@ -142,10 +139,166 @@ Test4.metadata = {
       type: metadataHelpers.string
     }
   },
-  comments: {
-    hasComments: true,
+  description: {
     lines: [\\"Comment for Test4\\"]
   }
 };
 Test4.propTypes = { name: PropTypes.string };"
+`;
+
+exports[`comments prop types mixed example 1`] = `
+"var _metadataHelpers = function () {
+  function makeFuncType(type, optionsName) {
+    return function (options) {
+      var opts = {};
+      opts[optionsName] = options;
+      return Object.assign({
+        type: type,
+        required: false
+      }, opts);
+    };
+  }
+
+  var t = {};
+  t.string = {
+    type: \\"string\\",
+    required: false
+  };
+  t.number = {
+    type: \\"number\\",
+    required: false
+  };
+  t.bool = {
+    type: \\"bool\\",
+    required: false
+  };
+  t.func = {
+    type: \\"func\\",
+    required: false
+  };
+  t.object = {
+    type: \\"object\\",
+    required: false
+  };
+  t.symbol = {
+    type: \\"symbol\\",
+    required: false
+  };
+  t.array = {
+    type: \\"array\\",
+    required: false
+  };
+  t.node = {
+    type: \\"node\\",
+    required: false
+  };
+  t.element = {
+    type: \\"element\\",
+    required: false
+  };
+  t.any = {
+    type: \\"any\\",
+    required: false
+  };
+  t.oneOf = makeFuncType(\\"oneOf\\", \\"possibleValues\\");
+  t.instanceOf = makeFuncType(\\"instanceOf\\", \\"constructor\\");
+  t.arrayOf = makeFuncType(\\"arrayOf\\", \\"elementType\\");
+  t.objectOf = makeFuncType(\\"objectOf\\", \\"valueType\\");
+  t.oneOfType = makeFuncType(\\"oneOfType\\", \\"possibleTypes\\");
+  t.shape = makeFuncType(\\"shape\\", \\"innerTypes\\");
+
+  t.isRequired = function (type) {
+    return Object.assign({}, type, {
+      required: true
+    });
+  };
+
+  return t;
+}();
+
+class Test1 extends React.Component {
+  static propTypes = {
+    // A comment for Test1 name
+    name: PropTypes.string
+  };
+
+  render() {
+    return null;
+  }
+}
+
+Test1.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.string,
+      description: {
+        lines: [\\"A comment for Test1 name\\"]
+      }
+    }
+  }
+};
+class Test2 extends React.Component {
+  render() {
+    return null;
+  }
+}
+Test2.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.string,
+      description: {
+        lines: [\\"* A comment for Test2 name\\"]
+      }
+    }
+  }
+};
+Test2.propTypes = {
+  /*
+   * A comment for Test2 name
+   */
+  name: PropTypes.string
+};
+
+function Test3() {
+  return null;
+}
+Test3.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.string,
+      description: {
+        lines: [\\"Test3 name, line 1\\", \\"Test3 name, line 2\\"]
+      }
+    }
+  }
+};
+Test3.propTypes = {
+  // Test3 name, line 1
+  // Test3 name, line 2
+  name: PropTypes.string
+};
+
+const Test4 = () => null;
+Test4.metadata = {
+  props: {
+    name: {
+      type: metadataHelpers.string,
+      description: {
+        lines: [\\"Test4 name\\"]
+      }
+    },
+    num: {
+      type: metadataHelpers.number,
+      description: {
+        lines: [\\"Test4 num\\"]
+      }
+    }
+  }
+};
+Test4.propTypes = {
+  /* Test4 name */
+  name: PropTypes.string,
+  // Test4 num
+  num: PropTypes.number
+};"
 `;

@@ -12,13 +12,14 @@ const init = (obj, ...fields) =>
     obj = obj[field];
   });
 
-const collectPropTypes = (propMetadata, objExp) =>
+const collectPropMetadata = (propMetadata, objExp) =>
   objExp.properties.forEach(propNode => {
     if (!t.isIdentifier(propNode.key)) return;
     const propName = propNode.key.name;
 
-    init(propMetadata, propName);
-    propMetadata[propName] = propNode.value;
+    init(propMetadata, 'props', propName);
+    propMetadata.props[propName] = propNode.value;
+    propMetadata.props[propName].comments = collectComments(propNode);
   });
 
 export default () => ({
@@ -94,8 +95,8 @@ export default () => ({
       if (!state.knownComponents[parentClassName]) return;
 
       init(state.knownComponents[parentClassName], 'props');
-      collectPropTypes(
-        state.knownComponents[parentClassName].props,
+      collectPropMetadata(
+        state.knownComponents[parentClassName],
         staticPropVal
       );
     },
@@ -111,7 +112,7 @@ export default () => ({
 
       const componentName = left.object.name;
       init(state.knownComponents, componentName, 'props');
-      collectPropTypes(state.knownComponents[componentName].props, right);
+      collectPropMetadata(state.knownComponents[componentName], right);
     },
 
     Program: {

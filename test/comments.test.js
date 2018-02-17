@@ -56,4 +56,50 @@ describe('comments on classes/functions', () => {
   });
 });
 
-xdescribe('comments prop types', () => {});
+describe('comments prop types', () => {
+  test('mixed example', () => {
+    const example = `
+      class Test1 extends React.Component {
+        static propTypes = {
+          // A comment for Test1 name
+          name: PropTypes.string
+        }
+
+        render() {
+          return null;
+        }
+      }
+
+      class Test2 extends React.Component {
+        render() {
+          return null;
+        }
+      }
+      Test2.propTypes = {
+        /*
+         * A comment for Test2 name
+         */
+        name: PropTypes.string
+      };
+
+      function Test3() {
+        return null;
+      }
+      Test3.propTypes = {
+        // Test3 name, line 1
+        // Test3 name, line 2
+        name: PropTypes.string
+      };
+
+      const Test4 = () => null;
+      Test4.propTypes = {
+        /* Test4 name */
+        name: PropTypes.string,
+        // Test4 num
+        num: PropTypes.number
+      };
+    `;
+
+    expect(transform(example)).toMatchSnapshot();
+  });
+});
