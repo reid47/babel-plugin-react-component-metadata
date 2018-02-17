@@ -133,6 +133,8 @@ export default () => ({
                 getOption(state, 'helpersName')
               );
 
+              setOption('helpersName', helpersName);
+
               programPath.unshiftContainer('body', buildHelpers(helpersName));
               insertedHelpers = true;
             }

@@ -89,7 +89,7 @@ class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string
+      type: _metadataHelpers.string
     }
   },
   description: {
@@ -104,7 +104,7 @@ class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string
+      type: _metadataHelpers.string
     }
   },
   description: {
@@ -122,7 +122,7 @@ function Test3() {
 Test3.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string
+      type: _metadataHelpers.string
     }
   },
   description: {
@@ -136,7 +136,7 @@ const Test4 = () => null;
 Test4.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string
+      type: _metadataHelpers.string
     }
   },
   description: {
@@ -230,7 +230,7 @@ class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string,
+      type: _metadataHelpers.string,
       description: {
         lines: [\\"A comment for Test1 name\\"]
       }
@@ -245,7 +245,7 @@ class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string,
+      type: _metadataHelpers.string,
       description: {
         lines: [\\"* A comment for Test2 name\\"]
       }
@@ -265,7 +265,7 @@ function Test3() {
 Test3.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string,
+      type: _metadataHelpers.string,
       description: {
         lines: [\\"Test3 name, line 1\\", \\"Test3 name, line 2\\"]
       }
@@ -282,13 +282,13 @@ const Test4 = () => null;
 Test4.metadata = {
   props: {
     name: {
-      type: metadataHelpers.string,
+      type: _metadataHelpers.string,
       description: {
         lines: [\\"Test4 name\\"]
       }
     },
     num: {
-      type: metadataHelpers.number,
+      type: _metadataHelpers.number,
       description: {
         lines: [\\"Test4 num\\"]
       }

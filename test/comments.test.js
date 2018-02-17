@@ -1,17 +1,4 @@
-import * as babel from 'babel-core';
-import plugin from '../src';
-
-const transform = (example, options) => {
-  const { code } = babel.transform(example, {
-    plugins: [
-      'syntax-class-properties',
-      'syntax-jsx',
-      options ? [plugin, options] : plugin
-    ]
-  });
-
-  return code;
-};
+import { transform } from './test-helpers';
 
 describe('comments on classes/functions', () => {
   test('mixed example', () => {
