@@ -114,11 +114,11 @@ If you'd like to configure this plugin with custom options (see below), pass the
 }
 ```
 
-### plugin options
+## plugin options
 
 This plugin can take a few options to customize its behavior.
 
-#### `metadataPropertyName` (string, default: 'metadata')
+### `metadataPropertyName` (string, default: 'metadata')
 
 This is the property that will be created on your components containing the metadata. If you specify `metadataPropertyName` to be `"__customMetadataProperty"`, you'd access component metadata like this:
 
@@ -128,7 +128,7 @@ import MyComponent from './path/to/component';
 console.log(MyComponent.__customMetadataProperty.props);
 ```
 
-### requirements
+## requirements
 
 For this plugin to generate metadata for a component, the following must be true:
 
