@@ -1,14 +1,14 @@
 # babel-plugin-react-component-metadata
 
 A Babel plugin that examines your React components and collects metadata about
-them (like prop types and documentation comments). It makes this information
+them (prop types and documentation comments). It makes this information
 available as properties on the React components themselves, so you can use them
 to generate documentation.
 
 For example, you might have a component like this:
 
 ```jsx
-const MyComponent = ({ firstName = 'Mx.', lastName }) => {
+const Greeter = ({ firstName = 'Mx.', lastName }) => {
   return (
     <h1>
       Hello, {firstName} {lastName}!
@@ -16,8 +16,10 @@ const MyComponent = ({ firstName = 'Mx.', lastName }) => {
   );
 };
 
-MyComponent.propTypes = {
+Greeter.propTypes = {
+  // First name of person to greet
   firstName: PropTypes.string,
+  // Last name of person to greet
   lastName: PropTypes.string.isRequired
 };
 ```
@@ -26,11 +28,11 @@ And somewhere else, you might want to import that component and inspect its
 metadata to generate documentation for it:
 
 ```jsx
-import MyComponent from 'path/to/component';
+import Greeter from 'path/to/component';
 import formatType from 'some/helper';
 
-const MyComponentDocs = () => {
-  const { props } = MyComponent.metadata;
+const GreeterDocs = () => {
+  const { props } = Greeter.metadata;
 
   return (
     <table>
@@ -39,14 +41,16 @@ const MyComponentDocs = () => {
           <th>Prop name</th>
           <th>Prop type</th>
           <th>Required?</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
       {Object.keys(props).map(propName => (
         <tr>
           <td>{propName}</td>
-          <td>{formatType(props[propName].type)}</td>
-          <td>{props[propName].required ? 'true' : 'false'}</td>
+          <td>{formatType(props[propName].typeInfo)}</td>
+          <td>{props[propName].typeInfo.required ? 'true' : 'false'}</td>
+          <td>{props[propName].description}</td>
         <tr>
       ))}
       </tbody>
@@ -159,8 +163,13 @@ Behind the scenes, this plugin is leveraging the information Babel knows about y
 For example, if you wrote code defining a component like this:
 
 ```jsx
+/**
+ * A component that renders an HTML heading
+ */
 class Heading extends React.Component {
   static propTypes = {
+    // The text that will be rendered
+    // in the heading
     text: PropTypes.string.isRequired
   };
 
@@ -177,8 +186,13 @@ class Heading extends React.Component {
 // expose prop-types info
 var metadataHelper = ...
 
+/**
+ * A component that renders an HTML heading
+ */
 class Heading extends React.Component {
   static propTypes = {
+    // The text that will be rendered
+    // in the heading
     text: PropTypes.string.isRequired
   };
 
@@ -188,8 +202,22 @@ class Heading extends React.Component {
 }
 
 Heading.metadata = {
+  description: {
+    lines: [
+      '*',
+      '* A component that renders an HTML heading'
+    ]
+  },
   props: {
-    text: metadataHelper.isRequired(metadataHelper.string)
+    text: {
+      description: {
+        lines: [
+          'The text that will be rendered',
+          'in the heading
+        ]
+      },
+      typeInfo: metadataHelper.isRequired(metadataHelper.string)
+    }
   }
 };
 ```
