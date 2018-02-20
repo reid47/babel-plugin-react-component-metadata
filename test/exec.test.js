@@ -5,10 +5,17 @@ test('populates metadata correctly', () => {
     const React = require('react');
     const PropTypes = require('prop-types');
 
+    // This is MyComponent.
+    // This is a description of it.
     class MyComponent {
       static propTypes = {
+        /**
+         * A required string prop. This comment uses
+         * the JSDoc format and **Markdown** syntax.
+         */
         prop1: PropTypes.string.isRequired,
         prop2: PropTypes.oneOf(['sm', 'md', 'lg']),
+        // prop3 has a shape type
         prop3: PropTypes.shape({
           alpha: PropTypes.number,
           beta: PropTypes.bool
@@ -32,8 +39,18 @@ test('populates metadata correctly', () => {
   const component = f(require);
 
   expect(component.metadata).toEqual({
+    description: {
+      lines: ['This is MyComponent.', 'This is a description of it.']
+    },
     props: {
       prop1: {
+        description: {
+          lines: [
+            '*',
+            '* A required string prop. This comment uses',
+            '* the JSDoc format and **Markdown** syntax.'
+          ]
+        },
         type: {
           type: 'string',
           required: true
@@ -47,6 +64,9 @@ test('populates metadata correctly', () => {
         }
       },
       prop3: {
+        description: {
+          lines: ['prop3 has a shape type']
+        },
         type: {
           type: 'shape',
           required: false,
