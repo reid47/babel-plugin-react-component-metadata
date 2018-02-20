@@ -51,13 +51,13 @@ test('populates metadata correctly', () => {
             '* the JSDoc format and **Markdown** syntax.'
           ]
         },
-        type: {
+        typeInfo: {
           type: 'string',
           required: true
         }
       },
       prop2: {
-        type: {
+        typeInfo: {
           type: 'oneOf',
           possibleValues: ['sm', 'md', 'lg'],
           required: false
@@ -67,7 +67,7 @@ test('populates metadata correctly', () => {
         description: {
           lines: ['prop3 has a shape type']
         },
-        type: {
+        typeInfo: {
           type: 'shape',
           required: false,
           innerTypes: {

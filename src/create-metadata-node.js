@@ -29,7 +29,7 @@ export default (componentName, propsNodes, comments, state) => {
             u.objProp(
               u.id(propName),
               u.obj(
-                u.objProp(u.id('type'), t.cloneDeep(propsNodes[propName])),
+                u.objProp(u.id('typeInfo'), t.cloneDeep(propsNodes[propName])),
                 createCommentNode(propsNodes[propName].comments)
               )
             )

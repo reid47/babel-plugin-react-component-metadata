@@ -86,10 +86,10 @@ class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -106,10 +106,10 @@ class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };"
@@ -204,10 +204,10 @@ class Test extends React.Component {
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };"
@@ -299,10 +299,10 @@ export class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -319,10 +319,10 @@ export default class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };"
@@ -409,10 +409,10 @@ class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -430,10 +430,10 @@ class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };
@@ -524,10 +524,10 @@ class Test extends React.Component {
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -618,10 +618,10 @@ export class Test1 extends React.Component {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -639,10 +639,10 @@ export default class Test2 extends React.Component {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };
@@ -729,10 +729,10 @@ function Test(props) {
 }Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -821,10 +821,10 @@ function Test(props) {
 }Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -913,10 +913,10 @@ const Test1 = props => <h1>{props.name}</h1>;
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -930,10 +930,10 @@ const Test2 = props => <h2>{props.hello}</h2>;
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };
@@ -1020,10 +1020,10 @@ const Test = props => <h1>{props.name}</h1>;
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1110,10 +1110,10 @@ export const Test1 = props => <h1>{props.name}</h1>;
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1207,10 +1207,10 @@ function Test1(props) {
 }Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1226,10 +1226,10 @@ function Test2(props) {
 }Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };
@@ -1318,10 +1318,10 @@ function Test(props) {
 }Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1410,10 +1410,10 @@ export function Test1(props) {
 }Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1429,10 +1429,10 @@ export default function Test2(props) {
 }Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };
@@ -1523,10 +1523,10 @@ const Test1 = function (props) {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1542,10 +1542,10 @@ const Test2 = function (props) {
 Test2.metadata = {
   props: {
     hello: {
-      type: _metadataHelpers.node
+      typeInfo: _metadataHelpers.node
     },
     world: {
-      type: _metadataHelpers.bool
+      typeInfo: _metadataHelpers.bool
     }
   }
 };
@@ -1634,10 +1634,10 @@ const Test = function (props) {
 Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1726,10 +1726,10 @@ export const Test1 = function (props) {
 Test1.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1827,10 +1827,10 @@ function Test(props) {
 }Test.metadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
@@ -1919,10 +1919,10 @@ function Test(props) {
 }Test.__customMetadata = {
   props: {
     name: {
-      type: _metadataHelpers.isRequired(_metadataHelpers.string)
+      typeInfo: _metadataHelpers.isRequired(_metadataHelpers.string)
     },
     age: {
-      type: _metadataHelpers.number
+      typeInfo: _metadataHelpers.number
     }
   }
 };
