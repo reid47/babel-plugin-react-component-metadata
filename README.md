@@ -1,5 +1,7 @@
 # babel-plugin-react-component-metadata
 
+[![npm](https://img.shields.io/npm/v/babel-plugin-react-component-metadata.svg)](https://www.npmjs.com/package/babel-plugin-react-component-metadata)
+
 A Babel plugin that examines your React components and collects metadata about
 them (prop types and documentation comments). It makes this information
 available as properties on the React components themselves, so you can use them
@@ -136,9 +138,9 @@ console.log(MyComponent.__customMetadataProperty.props);
 
 For this plugin to generate metadata for a component, the following must be true:
 
-* The component should be defined at the top level of a file. If it's exported at the top level (e.g. `export class ...`), that works too.
+- The component should be defined at the top level of a file. If it's exported at the top level (e.g. `export class ...`), that works too.
 
-* The component should have some `propTypes` defined for it, either at the top level like this:
+- The component should have some `propTypes` defined for it, either at the top level like this:
 
 ```jsx
 SomeComponent.propTypes = {
