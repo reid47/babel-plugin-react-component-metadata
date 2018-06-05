@@ -13,13 +13,24 @@ const init = (obj, ...fields) =>
   });
 
 const collectPropMetadata = (propMetadata, objExp) =>
-  objExp.properties.forEach(propNode => {
-    if (!t.isIdentifier(propNode.key)) return;
-    const propName = propNode.key.name;
+  objExp.properties.forEach(propertyOrMethod => {
+    if (!t.isIdentifier(propertyOrMethod.key)) return;
+    const propName = propertyOrMethod.key.name;
 
     init(propMetadata, 'props', propName);
-    propMetadata.props[propName] = propNode.value;
-    propMetadata.props[propName].comments = collectComments(propNode);
+    if (t.isObjectProperty(propertyOrMethod)) {
+      propMetadata.props[propName] = propertyOrMethod.value;
+    } else {
+      const { key, params, body, generator, async } = propertyOrMethod;
+      propMetadata.props[propName] = t.functionExpression(
+        key,
+        params,
+        body,
+        generator,
+        async
+      );
+    }
+    propMetadata.props[propName].comments = collectComments(propertyOrMethod);
   });
 
 export default () => ({

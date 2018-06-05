@@ -507,3 +507,25 @@ test('when no components found at top level', () => {
 
   expect(transform(example)).toMatchSnapshot();
 });
+
+test('when a custom validator method is used', () => {
+  const example = `
+    import PropTypes from 'prop-types';
+
+    function Test(props) {
+      return <h1>{props.name}</h1>;
+    };
+
+    Test.propTypes = {
+      name: PropTypes.string.isRequired,
+      hello: function(props, propName) {
+        return new Error('bad prop!');
+      },
+      world(props, propName) {
+        return new Error('bad prop!');
+      }
+    };
+  `;
+
+  expect(transform(example)).toMatchSnapshot();
+});
